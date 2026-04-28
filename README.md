@@ -1,6 +1,7 @@
 # Logan's Loophole
 
 Pathfinder 2e module that automates drug use and going through addiction, and provides with a comprehensive drug builder.
+<img width="1305" height="993" alt="char-hud" src="https://github.com/user-attachments/assets/3727e03e-d33f-4c17-a57d-3ea099d7d022" />
 
 ## Table of Contents
 
@@ -45,6 +46,8 @@ You cannot take more of the drug that caused the overdose until you are clear. O
 ### Hangover
 
 Can be disabled. When you reach a certain Intoxication threshold, you queue a Hangover. It fires after Intoxication reaches 0 or after a Long Rest. You roll Fortitude against it and suffer consequences defined in the Registry.
+
+<img width="749" height="524" alt="hangover" src="https://github.com/user-attachments/assets/b8c9d2b0-25d5-470c-b72c-38a209e992ba" />
 
 ### Addiction Points (AP) and addiction stages
 
@@ -94,6 +97,8 @@ You can do it by:
 a) Simply using the Flask icon in the Scene Controls (the menu on the left top of the screen)
 b) Going into Game Settings → Configure Settings → PF2e Logan's Loophole → "Edit Drug Categories".
 
+<img width="1469" height="947" alt="drug-registry" src="https://github.com/user-attachments/assets/1fb412a1-f86c-49a4-9ed1-bb1621e4f10e" />
+
 ### 2. Create a category
 
 Click "+ Add" in the sidebar to add a new drug category.
@@ -106,15 +111,21 @@ Each stage has a Toxicity threshold (TX). When a character's TX reaches a stage'
 
 Each stage has its own decay rate (how fast TX falls back), its own optional damage payload (rolled when the stage is reached), and its own list of effects/conditions/rule elements.
 
+<img width="712" height="887" alt="intox-stages" src="https://github.com/user-attachments/assets/a399e150-e526-4ea9-a09b-d72f51075979" />
+
 ### 4. Configure overdose
 
 Each category has an Overdose Threshold (the TX value at which an overdose save is forced) and four save outcomes (Critical Success, Success, Failure, Critical Failure). Each outcome can do its own damage and apply its own effects.
+
+<img width="729" height="886" alt="overdose" src="https://github.com/user-attachments/assets/d4e9216a-2442-47bc-9db4-639687168ca2" />
 
 ### 5. Configure addiction stages
 
 This is the chronic side. Each addiction stage is gated by an AP threshold. When AP crosses the threshold, the stage activates.
 
 For each stage you set: maximum tolerance, AP decay rate, satiation duration, will-save penalty (applied to future addiction saves), quit penalty (lingering Will-save penalty after a full cure), chronic effects (active while addicted), and withdrawal effects (active when satiation lapses).
+
+<img width="741" height="882" alt="addiction-satges" src="https://github.com/user-attachments/assets/73a0dfdc-28cf-4afb-a157-6a124f219c7f" />
 
 ### 6. Save the category
 
@@ -125,6 +136,9 @@ Click Save. The category is now persisted in the world.
 In any actor's inventory, or in a world item directory, create a new consumable item. Add the **drug** trait. A new "Drug Config" tab appears on the item sheet.
 
 In the Drug Config tab: pick the category from the dropdown to bind the substance to the drug category and start configuring it.
+
+<img width="1110" height="680" alt="vodka-desc" src="https://github.com/user-attachments/assets/6a6b9e87-dae3-416b-924f-a009e09bf32d" />
+<img width="1122" height="710" alt="vodka-config" src="https://github.com/user-attachments/assets/fc37d0e2-8a4b-4f17-83fc-d66c8f19d390" />
 
 ### 8. Consume it
 
@@ -138,11 +152,15 @@ After that, a HUD appears in a Character Sheet, in the Effects Tab, where you ca
 
 The HUD appears on the actor sheet's Effects tab when any drug state exists.
 
+<img width="1305" height="993" alt="char-hud" src="https://github.com/user-attachments/assets/41932bcc-ae43-4ffb-a612-47020e7bf5e6" />
+
 ---
 
 ## API reference
 
 The module exposes its API as `game.modules.get("pf2e-logans-loophole").api`. This is available on the `ready` hook and onward.
+
+<img width="504" height="324" alt="treat" src="https://github.com/user-attachments/assets/2a3e2674-af6c-48b0-a2d8-620ab9236d7e" />
 
 These are the methods that macros should be built against.
 
