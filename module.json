@@ -2,7 +2,7 @@
    "id": "pf2e-logans-loophole",
    "title": "PF2e Logan's Loophole",
    "description": "Tolerance vs. Toxicity addiction system for PF2e. GM defines Parent Categories of substances; consumable items inherit those rules. Tracks acute Toxicity (the high), chronic Tolerance (the ablative shield), Hangovers, Withdrawal, Recovery, Relapse, and Overdose - all tied to the world clock.",
-   "version": "1.0.0",
+   "version": "#{VERSION}#",
    "compatibility": {
       "minimum": "13",
       "verified": "13"
@@ -10,7 +10,8 @@
    "systems": ["pf2e"],
    "authors": [
       {
-         "name": "Logan's Loophole"
+         "name": "Aztec",
+         "discord": "two.bears.high.fiving"
       }
    ],
    "esmodules": ["src/main.mjs"],
@@ -20,6 +21,11 @@
          "lang": "en",
          "name": "English",
          "path": "lang/en.json"
+      },
+      {
+         "lang": "ru",
+         "name": "Русский",
+         "path": "lang/ru.json"
       }
    ],
    "packs": [
@@ -57,5 +63,8 @@
          }
       }
    ],
+   "url": "#{URL}#",
+   "manifest": "#{MANIFEST}#",
+   "download": "#{DOWNLOAD}#",
    "flags": {}
 }
