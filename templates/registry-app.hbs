@@ -1,0 +1,530 @@
+<div class="ll-registry__layout">
+
+   <aside class="ll-registry__sidebar">
+      <header class="ll-registry__sidebar-header">
+         <h2><i class="fas fa-flask"></i> {{localize 'LL.Registry.Categories'}}</h2>
+         <div class="ll-registry__sidebar-actions">
+            <button type="button" class="ll-btn ll-btn--primary ll-registry__add-btn"
+                    data-action="create-category"
+                    data-tooltip="{{localize 'LL.Registry.AddCategory'}}"
+                    title="{{localize 'LL.Registry.AddCategory'}}">
+               <i class="fas fa-plus"></i> {{localize 'LL.Registry.Add'}}
+            </button>
+            <button type="button" class="ll-icon-btn"
+                    data-action="import-category"
+                    data-tooltip="{{localize 'LL.Registry.ImportFile'}}"
+                    title="{{localize 'LL.Registry.ImportFile'}}">
+               <i class="fas fa-file-import"></i>
+            </button>
+            <button type="button" class="ll-icon-btn"
+                    data-action="export-all-categories"
+                    data-tooltip="{{localize 'LL.Registry.ExportAll'}}"
+                    title="{{localize 'LL.Registry.ExportAll'}}">
+               <i class="fas fa-file-export"></i>
+            </button>
+         </div>
+      </header>
+      <ul class="ll-registry__list">
+         {{#each categories as |cat|}}
+            <li class="ll-registry__list-item {{#if (ll-eq cat.id ../selectedId)}}is-selected{{/if}}"
+                data-action="select-category"
+                data-category-id="{{cat.id}}">
+               <img src="{{cat.img}}" class="ll-registry__list-img" />
+               <span class="ll-registry__list-name">{{cat.name}}</span>
+               <button type="button" class="ll-icon-btn ll-icon-btn--small"
+                       data-action="export-category"
+                       data-category-id="{{cat.id}}"
+                       data-tooltip="{{localize 'LL.Registry.ExportCategory'}}"
+                       title="{{localize 'LL.Registry.ExportCategory'}}">
+                  <i class="fas fa-file-export"></i>
+               </button>
+               <button type="button" class="ll-icon-btn ll-icon-btn--danger ll-icon-btn--small"
+                       data-action="delete-category"
+                       data-category-id="{{cat.id}}"
+                       data-tooltip="{{localize 'LL.Registry.DeleteTip'}}"
+                       title="{{localize 'LL.Registry.DeleteTip'}}">
+                  <i class="fas fa-trash"></i>
+               </button>
+            </li>
+         {{else}}
+            <li class="ll-registry__list-empty">
+               {{localize 'LL.Registry.EmptySelection'}}
+            </li>
+         {{/each}}
+      </ul>
+   </aside>
+
+   <section class="ll-registry__editor">
+      {{#if draft}}
+
+      <header class="ll-registry__editor-header">
+         <input type="text" data-ll-path="name" value="{{draft.name}}" class="ll-registry__title-input"/>
+         <div class="ll-registry__header-meta">
+            <label class="ll-field ll-field--inline">
+               <span>{{localize 'LL.Registry.Image'}}</span>
+               <div class="ll-file-row">
+                  <input type="text" data-ll-path="img" value="{{draft.img}}" />
+                  <button type="button" class="ll-icon-btn"
+                          data-action="pick-file"
+                          data-target="img"
+                          data-tooltip="{{localize 'LL.Registry.IconTip'}}">
+                     <i class="fas fa-file-image"></i>
+                  </button>
+               </div>
+            </label>
+         </div>
+         <div class="ll-registry__header-actions">
+            <span class="ll-dirty-indicator" style="{{#unless isDirty}}display: none;{{/unless}}">
+               <i class="fas fa-circle"></i> {{localize 'LL.Registry.UnsavedChanges'}}
+            </span>
+         </div>
+      </header>
+
+      <label class="ll-field ll-field--block">
+         <span>{{localize 'LL.Registry.Description'}}</span>
+         <textarea data-ll-path="description" rows="2" placeholder="{{localize 'LL.Registry.DescPlaceholder'}}">{{draft.description}}</textarea>
+      </label>
+
+      <label class="ll-field ll-field--block" style="margin-top: 0.5em;">
+         <span>{{localize 'LL.Registry.RootRollOptions'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.RootRollOptionsTip'}}"></i></span>
+         <input type="text" placeholder="{{localize 'LL.Registry.RootRollOptionsPlaceholder'}}" data-ll-path="rollOptions" value="{{draft.rollOptions}}" />
+      </label>
+
+      <section class="ll-section ll-section--intox">
+         <h3 class="ll-section__title">
+            <i class="fas fa-bottle-droplet"></i> {{localize 'LL.Registry.AcuteTrack'}}
+         </h3>
+
+         <label class="ll-field ll-field--block" style="margin-bottom: 1em;">
+            <span>{{localize 'LL.Registry.IntoxRollOptions'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.IntoxRollOptionsTip'}}"></i></span>
+            <input type="text" placeholder="{{localize 'LL.Registry.IntoxRollOptionsPlaceholder'}}" data-ll-path="acute.rollOptions" value="{{draft.acute.rollOptions}}" />
+         </label>
+
+         <h4 class="ll-subhead">
+            {{localize 'LL.Registry.IntoxStages'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.IntoxStagesTip'}}"></i>
+            <button type="button" class="ll-icon-btn" data-action="add-intox-stage" data-tooltip="{{localize 'LL.Registry.AddIntoxStage'}}"><i class="fas fa-plus"></i></button>
+         </h4>
+
+         {{#each draft.acute.intoxStages as |stage idx|}}
+            <details class="ll-stage-card ll-stage-card--intox" data-accordion-key="intox-{{idx}}">
+               <summary class="ll-stage-card__summary">
+                  <span class="ll-stage-card__label">{{ll-add idx 1}}. {{stage.label}}</span>
+                  <span class="ll-stage-card__chip">{{localize 'LL.Registry.GteTV' tv=stage.tox}}</span>
+                  <button type="button" class="ll-icon-btn ll-icon-btn--danger ll-icon-btn--small"
+                          data-action="remove-intox-stage" data-index="{{idx}}"
+                          data-tooltip="{{localize 'LL.Registry.RemoveStage'}}">
+                     <i class="fas fa-trash"></i>
+                  </button>
+               </summary>
+
+               <div class="ll-stage-card__body">
+                  <div class="ll-grid ll-grid--3">
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.StageName'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.StageNameTip'}}"></i>
+                        </span>
+                        <input type="text" data-ll-path="acute.intoxStages.{{idx}}.label" value="{{stage.label}}" />
+                     </label>
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.TVThreshold'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.TVThresholdTip'}}"></i>
+                        </span>
+                        <input type="number" min="0" data-ll-path="acute.intoxStages.{{idx}}.tox" value="{{stage.tox}}" />
+                     </label>
+                     <label class="ll-field ll-field--span2">
+                        <span>{{localize 'LL.Registry.Description'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.DescriptionTip'}}"></i>
+                        </span>
+                        <input type="text" data-ll-path="acute.intoxStages.{{idx}}.description" value="{{stage.description}}" />
+                     </label>
+                  </div>
+
+                  <fieldset class="ll-fieldset" style="margin-top: 0.6em;">
+                     <legend>{{localize 'LL.Registry.DecayRate'}}
+                        <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.DecayFrequencyTip'}}"></i>
+                     </legend>
+                     <div class="ll-grid" style="grid-template-columns: 1fr auto 1fr 1.5fr; align-items: center;">
+                        <input type="number" min="0" data-ll-path="acute.intoxStages.{{idx}}.decay.amount" value="{{stage.decay.amount}}" />
+                        <span style="color: var(--ll-muted); font-size: 0.85em; font-weight: 600; text-align: center;">{{localize 'LL.Registry.Per'}}</span>
+                        <input type="number" min="0" data-ll-path="acute.intoxStages.{{idx}}.decay.per.value" value="{{stage.decay.per.value}}" />
+                        <select data-ll-path="acute.intoxStages.{{idx}}.decay.per.unit">
+                           {{#each ../timeUnits as |u|}}
+                              <option value="{{u}}" {{#if (ll-eq u stage.decay.per.unit)}}selected{{/if}}>{{u}}</option>
+                           {{/each}}
+                        </select>
+                     </div>
+                  </fieldset>
+
+                   {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs"
+                       effects=stage.effects
+                       path=(ll-concat "acute.intoxStages." idx ".effects")
+                       conditionsAll=../conditionsAll
+                       label=(localize 'LL.Effects.Sustained')
+                       tip=(localize 'LL.Effects.SustainedTip')}}
+
+                  <div class="ll-grid ll-grid--2">
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.Payload'}}
+                            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.PayloadTip'}}"></i>
+                        </span>
+                        <input type="text" placeholder="{{localize 'LL.Registry.DamagePlaceholder'}}"
+                               data-ll-path="acute.intoxStages.{{idx}}.payload.formula"
+                               value="{{stage.payload.formula}}" />
+                     </label>
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.DamageType'}}</span>
+                        <select data-ll-path="acute.intoxStages.{{idx}}.payload.damageType">
+                           {{#each ../damageTypes as |t|}}
+                              <option value="{{t}}" {{#if (ll-eq t stage.payload.damageType)}}selected{{/if}}>{{t}}</option>
+                           {{/each}}
+                        </select>
+                     </label>
+                  </div>
+               </div>
+            </details>
+         {{/each}}
+      </section>
+
+      <section class="ll-section ll-section--overdose">
+         <h3 class="ll-section__title">
+            <i class="fas fa-skull-crossbones"></i> {{localize 'LL.Registry.Overdose'}}
+         </h3>
+
+         <label class="ll-field ll-field--block" style="margin-bottom: 1em;">
+            <span>{{localize 'LL.Registry.OverdoseRollOptions'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.OverdoseRollOptionsTip'}}"></i></span>
+            <input type="text" placeholder="{{localize 'LL.Registry.OverdoseRollOptionsPlaceholder'}}" data-ll-path="acute.overdose.rollOptions" value="{{draft.acute.overdose.rollOptions}}" />
+         </label>
+
+         <div class="ll-grid ll-grid--3">
+            <label class="ll-field">
+               <span>{{localize 'LL.Registry.ThresholdTV'}}
+                  <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.OverdoseHelp'}}"></i>
+               </span>
+               <input type="number" min="0" data-ll-path="acute.overdose.threshold" value="{{draft.acute.overdose.threshold}}" />
+            </label>
+            <label class="ll-field">
+               <span>{{localize 'LL.Registry.FortitudeDC'}}
+                  <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.FortitudeDCTip'}}"></i>
+               </span>
+               <input type="number" min="0" placeholder="{{localize 'LL.Registry.LevelBasedDC'}}" data-ll-path="acute.overdose.dc" value="{{draft.acute.overdose.dc}}" />
+            </label>
+            <label class="ll-field">
+               <span>{{localize 'LL.Registry.Duration'}}</span>
+               <div style="display: flex; gap: 0.25em;">
+                  <input type="number" min="0" data-ll-path="acute.overdose.duration.value" value="{{draft.acute.overdose.duration.value}}" style="width: 40%;" />
+                  <select data-ll-path="acute.overdose.duration.unit" style="width: 60%;">
+                     {{#each timeUnits as |u|}}
+                        <option value="{{u}}" {{#if (ll-eq u ../draft.acute.overdose.duration.unit)}}selected{{/if}}>{{u}}</option>
+                     {{/each}}
+                  </select>
+               </div>
+            </label>
+         </div>
+
+         <h4 class="ll-subhead">{{localize 'LL.Registry.OverdoseSaveOutcomes'}}</h4>
+
+         <details class="ll-stage-card" data-accordion-key="overdose-cs" style="border-left: 4px solid var(--ll-good, #4caf50);">
+            <summary class="ll-stage-card__summary">{{localize 'LL.DOS.CritSuccess'}}</summary>
+            <div class="ll-stage-card__body">
+               <div class="ll-grid ll-grid--2">
+                  <label class="ll-field ll-field--inline">
+                     <input type="checkbox" data-ll-path="acute.overdose.criticalSuccess.reduceToxicity" {{#if draft.acute.overdose.criticalSuccess.reduceToxicity}}checked{{/if}} />
+                     <span>{{localize 'LL.Registry.RemoveToxicity'}}</span>
+                  </label>
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.AmountToRemove'}}</span>
+                     <input type="number" min="0" data-ll-path="acute.overdose.criticalSuccess.reduceAmount" value="{{draft.acute.overdose.criticalSuccess.reduceAmount}}" />
+                  </label>
+               </div>
+               <div class="ll-grid ll-grid--2">
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageFormula'}}</span>
+                     <input type="text" placeholder="{{localize 'LL.Registry.DamagePlaceholder'}}" data-ll-path="acute.overdose.criticalSuccess.payload.formula" value="{{draft.acute.overdose.criticalSuccess.payload.formula}}" />
+                  </label>
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageType'}}</span>
+                     <select data-ll-path="acute.overdose.criticalSuccess.payload.damageType">
+                        {{#each damageTypes as |t|}}
+                           <option value="{{t}}" {{#if (ll-eq t ../draft.acute.overdose.criticalSuccess.payload.damageType)}}selected{{/if}}>{{t}}</option>
+                        {{/each}}
+                     </select>
+                  </label>
+               </div>
+               {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs" effects=draft.acute.overdose.criticalSuccess.effects path="acute.overdose.criticalSuccess.effects" conditionsAll=conditionsAll label=(localize 'LL.Registry.Effects') tip=(localize 'LL.Registry.OverdoseEffectsTip')}}
+            </div>
+         </details>
+
+         <details class="ll-stage-card" data-accordion-key="overdose-s" style="border-left: 4px solid var(--ll-good, #4caf50);">
+            <summary class="ll-stage-card__summary">{{localize 'LL.DOS.Success'}}</summary>
+            <div class="ll-stage-card__body">
+               <div class="ll-grid ll-grid--2">
+                  <label class="ll-field ll-field--inline">
+                     <input type="checkbox" data-ll-path="acute.overdose.success.reduceToxicity" {{#if draft.acute.overdose.success.reduceToxicity}}checked{{/if}} />
+                     <span>{{localize 'LL.Registry.RemoveToxicity'}}</span>
+                  </label>
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.AmountToRemove'}}</span>
+                     <input type="number" min="0" data-ll-path="acute.overdose.success.reduceAmount" value="{{draft.acute.overdose.success.reduceAmount}}" />
+                  </label>
+               </div>
+               <div class="ll-grid ll-grid--2">
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageFormula'}}</span>
+                     <input type="text" placeholder="{{localize 'LL.Registry.DamagePlaceholder'}}" data-ll-path="acute.overdose.success.payload.formula" value="{{draft.acute.overdose.success.payload.formula}}" />
+                  </label>
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageType'}}</span>
+                     <select data-ll-path="acute.overdose.success.payload.damageType">
+                        {{#each damageTypes as |t|}}
+                           <option value="{{t}}" {{#if (ll-eq t ../draft.acute.overdose.success.payload.damageType)}}selected{{/if}}>{{t}}</option>
+                        {{/each}}
+                     </select>
+                  </label>
+               </div>
+               {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs" effects=draft.acute.overdose.success.effects path="acute.overdose.success.effects" conditionsAll=conditionsAll label=(localize 'LL.Registry.Effects') tip=(localize 'LL.Registry.OverdoseEffectsTip')}}
+            </div>
+         </details>
+
+         <details class="ll-stage-card" data-accordion-key="overdose-f" style="border-left: 4px solid var(--ll-danger, #f44336);">
+            <summary class="ll-stage-card__summary">{{localize 'LL.DOS.Failure'}}</summary>
+            <div class="ll-stage-card__body">
+               <div class="ll-grid ll-grid--2">
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageFormula'}}</span>
+                     <input type="text" placeholder="{{localize 'LL.Registry.DamagePlaceholderReq'}}" data-ll-path="acute.overdose.failure.payload.formula" value="{{draft.acute.overdose.failure.payload.formula}}" />
+                  </label>
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageType'}}</span>
+                     <select data-ll-path="acute.overdose.failure.payload.damageType">
+                        {{#each damageTypes as |t|}}
+                           <option value="{{t}}" {{#if (ll-eq t ../draft.acute.overdose.failure.payload.damageType)}}selected{{/if}}>{{t}}</option>
+                        {{/each}}
+                     </select>
+                  </label>
+               </div>
+               {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs" effects=draft.acute.overdose.failure.effects path="acute.overdose.failure.effects" conditionsAll=conditionsAll label=(localize 'LL.Registry.Effects') tip=(localize 'LL.Registry.OverdoseEffectsTip')}}
+            </div>
+         </details>
+
+         <details class="ll-stage-card" data-accordion-key="overdose-cf" style="border-left: 4px solid var(--ll-danger, #f44336);">
+            <summary class="ll-stage-card__summary">{{localize 'LL.DOS.CritFailure'}}</summary>
+            <div class="ll-stage-card__body">
+               <div class="ll-grid ll-grid--2">
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageFormula'}}</span>
+                     <input type="text" placeholder="{{localize 'LL.Registry.DamagePlaceholderReq'}}" data-ll-path="acute.overdose.criticalFailure.payload.formula" value="{{draft.acute.overdose.criticalFailure.payload.formula}}" />
+                  </label>
+                  <label class="ll-field">
+                     <span>{{localize 'LL.Registry.DamageType'}}</span>
+                     <select data-ll-path="acute.overdose.criticalFailure.payload.damageType">
+                        {{#each damageTypes as |t|}}
+                           <option value="{{t}}" {{#if (ll-eq t ../draft.acute.overdose.criticalFailure.payload.damageType)}}selected{{/if}}>{{t}}</option>
+                        {{/each}}
+                     </select>
+                  </label>
+               </div>
+               {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs" effects=draft.acute.overdose.criticalFailure.effects path="acute.overdose.criticalFailure.effects" conditionsAll=conditionsAll label=(localize 'LL.Registry.Effects') tip=(localize 'LL.Registry.OverdoseEffectsTip')}}
+            </div>
+         </details>
+
+      </section>
+
+      <section class="ll-section ll-section--hangover">
+         <h3 class="ll-section__title">
+            <i class="fas fa-bed"></i> {{localize 'LL.Registry.Hangover'}}
+         </h3>
+         
+         <label class="ll-field ll-field--block" style="margin-bottom: 1em;">
+            <span>{{localize 'LL.Registry.HangoverRollOptions'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.HangoverRollOptionsTip'}}"></i></span>
+            <input type="text" placeholder="{{localize 'LL.Registry.HangoverRollOptionsPlaceholder'}}" data-ll-path="acute.hangover.rollOptions" value="{{draft.acute.hangover.rollOptions}}" />
+         </label>
+
+         <div class="ll-grid ll-grid--4">
+            <label class="ll-field ll-field--inline">
+               <input type="checkbox" data-ll-path="acute.hangover.enabled" {{#if draft.acute.hangover.enabled}}checked{{/if}} />
+               <span>{{localize 'LL.Registry.Enabled'}}
+                  <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.EnabledTip'}}"></i>
+               </span>
+             </label>
+            <label class="ll-field">
+               <span>{{localize 'LL.Registry.ThresholdTV'}}
+                  <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.HangoverHelp'}}"></i>
+               </span>
+               <input type="number" min="0" data-ll-path="acute.hangover.threshold" value="{{draft.acute.hangover.threshold}}" />
+             </label>
+             <label class="ll-field">
+               <span>{{localize 'LL.Registry.FortitudeDC'}}</span>
+               <input type="number" min="0" placeholder="{{localize 'LL.Registry.LevelBasedDC'}}" data-ll-path="acute.hangover.dc" value="{{draft.acute.hangover.dc}}" />
+            </label>
+            <label class="ll-field">
+               <span>{{localize 'LL.Registry.Duration'}}</span>
+               <div style="display: flex; gap: 0.25em;">
+                  <input type="number" min="0" data-ll-path="acute.hangover.duration.value" value="{{draft.acute.hangover.duration.value}}" style="width: 40%;" />
+                  <select data-ll-path="acute.hangover.duration.unit" style="width: 60%;">
+                     {{#each timeUnits as |u|}}
+                        <option value="{{u}}" {{#if (ll-eq u ../draft.acute.hangover.duration.unit)}}selected{{/if}}>{{u}}</option>
+                     {{/each}}
+                  </select>
+               </div>
+            </label>
+         </div>
+
+         <h4 class="ll-subhead">{{localize 'LL.Registry.HangoverSaveOutcomes'}}</h4>
+         <p class="ll-help" style="margin-top: 0;"><em>{{localize 'LL.Registry.HangoverNoEffect'}}</em></p>
+
+         <details class="ll-stage-card" data-accordion-key="hangover-f" style="border-left: 4px solid var(--ll-danger, #f44336);">
+            <summary class="ll-stage-card__summary">{{localize 'LL.DOS.Failure'}}</summary>
+            <div class="ll-stage-card__body">
+               {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs" effects=draft.acute.hangover.failure.effects path="acute.hangover.failure.effects" conditionsAll=conditionsAll label=(localize 'LL.Registry.Effects') tip=(localize 'LL.Registry.HangoverEffectsTip')}}
+            </div>
+         </details>
+
+         <details class="ll-stage-card" data-accordion-key="hangover-cf" style="border-left: 4px solid var(--ll-danger, #f44336);">
+            <summary class="ll-stage-card__summary">{{localize 'LL.DOS.CritFailure'}}</summary>
+            <div class="ll-stage-card__body">
+               {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs" effects=draft.acute.hangover.criticalFailure.effects path="acute.hangover.criticalFailure.effects" conditionsAll=conditionsAll label=(localize 'LL.Registry.Effects') tip=(localize 'LL.Registry.HangoverEffectsTip')}}
+            </div>
+         </details>
+
+      </section>
+
+      <section class="ll-section ll-section--chronic">
+         <h3 class="ll-section__title">
+            <i class="fas fa-heart-crack"></i> {{localize 'LL.Registry.ChronicTrack'}}
+         </h3>
+
+         <div class="ll-grid ll-grid--2">
+            <label class="ll-field">
+               <span>{{localize 'LL.Registry.BaseWillDC'}}
+                  <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.BaseWillDCTip'}}"></i>
+               </span>
+               <input type="number" min="0" placeholder="{{localize 'LL.Registry.LevelBasedDC'}}" data-ll-path="chronic.baseWillDC" value="{{draft.chronic.baseWillDC}}" />
+            </label>
+         </div>
+
+         <label class="ll-field ll-field--block" style="margin-top: 1em;">
+            <span>{{localize 'LL.Registry.AddictionRollOptions'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.AddictionRollOptionsTip'}}"></i></span>
+            <input type="text" placeholder="{{localize 'LL.Registry.AddictionRollOptionsPlaceholder'}}" data-ll-path="chronic.rollOptions" value="{{draft.chronic.rollOptions}}" />
+         </label>
+
+         <h4 class="ll-subhead">
+             {{localize 'LL.Registry.AddictionStages'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.AddictionStagesTip'}}"></i>
+            <button type="button" class="ll-icon-btn" data-action="add-addiction-stage" data-tooltip="{{localize 'LL.Registry.AddStage'}}"><i class="fas fa-plus"></i></button>
+         </h4>
+
+         {{#each draft.chronic.addictionStages as |stage idx|}}
+            <details class="ll-stage-card ll-stage-card--chronic" data-accordion-key="addiction-{{idx}}">
+               <summary class="ll-stage-card__summary">
+                  <span class="ll-stage-card__label">{{ll-add idx 1}}. {{stage.label}}</span>
+                  <span class="ll-stage-card__chip">{{localize 'LL.Registry.APChip' ap=stage.apThreshold}}</span>
+                  <span class="ll-stage-card__chip">{{localize 'LL.Registry.ToleranceChip' tol=stage.maxTolerance}}</span>
+                  <button type="button" class="ll-icon-btn ll-icon-btn--danger ll-icon-btn--small"
+                          data-action="remove-addiction-stage" data-index="{{idx}}"
+                          data-tooltip="{{localize 'LL.Registry.RemoveStage'}}">
+                     <i class="fas fa-trash"></i>
+                  </button>
+               </summary>
+               <div class="ll-stage-card__body">
+                  <div class="ll-grid ll-grid--3">
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.StageName'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.AddictionStageNameTip'}}"></i>
+                        </span>
+                        <input type="text" data-ll-path="chronic.addictionStages.{{idx}}.label" value="{{stage.label}}" />
+                     </label>
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.APThreshold'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.APThresholdTip'}}"></i>
+                        </span>
+                          <input type="number" min="0" data-ll-path="chronic.addictionStages.{{idx}}.apThreshold" value="{{stage.apThreshold}}" />
+                     </label>
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.MaxTolerance'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.MaxToleranceTip'}}"></i>
+                        </span>
+                        <input type="number" min="0" data-ll-path="chronic.addictionStages.{{idx}}.maxTolerance" value="{{stage.maxTolerance}}" />
+                     </label>
+                  </div>
+
+                  <div class="ll-grid ll-grid--2">
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.WillPenalty'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.WillPenaltyTip'}}"></i>
+                        </span>
+                        <input type="number" data-ll-path="chronic.addictionStages.{{idx}}.willPenalty" value="{{stage.willPenalty}}" />
+                     </label>
+                     <label class="ll-field">
+                        <span>{{localize 'LL.Registry.QuitPenalty'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.QuitPenaltyTip'}}"></i>
+                        </span>
+                        <input type="number" data-ll-path="chronic.addictionStages.{{idx}}.quitPenalty" value="{{stage.quitPenalty}}" />
+                     </label>
+                  </div>
+
+                  <div class="ll-grid ll-grid--2">
+                     <fieldset class="ll-fieldset">
+                          <legend>{{localize 'LL.Registry.APDecayRate'}}
+                           <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.APDecayAmountTip'}}"></i>
+                        </legend>
+                        <div class="ll-grid" style="grid-template-columns: 1fr auto 1fr 1.5fr; align-items: center;">
+                           <input type="number" min="0" data-ll-path="chronic.addictionStages.{{idx}}.apDecayAmount" value="{{stage.apDecayAmount}}" />
+                           <span style="color: var(--ll-muted); font-size: 0.85em; font-weight: 600; text-align: center;">{{localize 'LL.Registry.Per'}}</span>
+                           <input type="number" min="0" data-ll-path="chronic.addictionStages.{{idx}}.apDecayPer.value" value="{{stage.apDecayPer.value}}" />
+                           <select data-ll-path="chronic.addictionStages.{{idx}}.apDecayPer.unit">
+                               {{#each ../timeUnits as |u|}}
+                                 <option value="{{u}}" {{#if (ll-eq u stage.apDecayPer.unit)}}selected{{/if}}>{{u}}</option>
+                              {{/each}}
+                            </select>
+                        </div>
+                     </fieldset>
+                     <fieldset class="ll-fieldset">
+                         <legend>{{localize 'LL.Registry.SatiationValue'}}
+                             <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.Registry.SatiationTip'}}"></i>
+                        </legend>
+                        <div class="ll-grid ll-grid--2">
+                            <input type="number" min="0" data-ll-path="chronic.addictionStages.{{idx}}.satiation.value" value="{{stage.satiation.value}}" />
+                           <select data-ll-path="chronic.addictionStages.{{idx}}.satiation.unit">
+                              {{#each ../timeUnits as |u|}}
+                                 <option value="{{u}}" {{#if (ll-eq u stage.satiation.unit)}}selected{{/if}}>{{u}}</option>
+                               {{/each}}
+                           </select>
+                         </div>
+                      </fieldset>
+                  </div>
+
+                  {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs"
+                       effects=stage.chronicEffects
+                       path=(ll-concat "chronic.addictionStages." idx ".chronicEffects")
+                       conditionsAll=../conditionsAll
+                       label=(localize 'LL.Effects.Chronic')
+                       tip=(localize 'LL.Effects.ChronicTip')}}
+
+                  {{> "modules/pf2e-logans-loophole/templates/partial-effects.hbs"
+                       effects=stage.withdrawalEffects
+                       path=(ll-concat "chronic.addictionStages." idx ".withdrawalEffects")
+                       conditionsAll=../conditionsAll
+                       label=(localize 'LL.Effects.Withdrawal')
+                       tip=(localize 'LL.Effects.WithdrawalTip')}}
+               </div>
+            </details>
+         {{/each}}
+      </section>
+
+      <footer class="ll-registry__save-footer">
+         <button type="button"
+                 data-action="save-category"
+                 class="ll-btn ll-btn--giant ll-btn--primary {{#if isDirty}}is-dirty{{/if}}">
+            <i class="fas fa-save"></i> {{localize 'LL.Registry.SaveChanges'}}
+         </button>
+      </footer>
+
+      {{else}}
+      <div class="ll-registry__empty">
+         <i class="fas fa-flask fa-3x"></i>
+         <p>{{localize 'LL.Registry.EmptySelection'}}</p>
+         </div>
+      {{/if}}
+   </section>
+</div>

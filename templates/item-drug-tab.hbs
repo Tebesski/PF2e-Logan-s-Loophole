@@ -1,0 +1,167 @@
+<div class="ll-drug-tab__inner">
+
+   <header class="ll-drug-tab__header" style="margin-bottom: 0.8em;">
+      <h2><i class="fas fa-flask"></i> {{localize 'LL.ItemSheet.Header'}}</h2>
+      {{#if category}}
+         <span class="ll-pill is-clickable" data-tooltip="{{localize 'LL.ItemSheet.UnboundTip'}}" data-action="open-registry" data-category-id="{{category.id}}">
+            <img src="{{category.img}}" /> {{category.name}}
+         </span>
+      {{else}}
+         <span class="ll-pill ll-pill--warn"><i class="fas fa-triangle-exclamation"></i> {{localize 'LL.ItemSheet.Unbound'}}</span>
+      {{/if}}
+      <div class="ll-drug-tab__actions">
+         <button type="button" class="ll-icon-btn"
+                 data-action="import-drug-item"
+                 data-tooltip="{{localize 'LL.ItemSheet.ImportTip'}}"
+                 title="{{localize 'LL.ItemSheet.ImportTip'}}">
+            <i class="fas fa-file-import"></i>
+         </button>
+         <button type="button" class="ll-icon-btn"
+                 data-action="export-drug-item"
+                 data-tooltip="{{localize 'LL.ItemSheet.ExportTip'}}"
+                 title="{{localize 'LL.ItemSheet.ExportTip'}}">
+            <i class="fas fa-file-export"></i>
+         </button>
+      </div>
+   </header>
+
+   <div class="ll-grid ll-grid--2">
+      
+      <label class="ll-field">
+         <span>{{localize 'LL.ItemSheet.ParentCategory'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.ParentCategoryTip'}}"></i>
+         </span>
+         <select data-ll-path="categoryId">
+            <option value="" {{#unless drug.categoryId}}selected{{/unless}}>{{localize 'LL.ItemSheet.None'}}</option>
+            {{#each categories as |c|}}
+               <option value="{{c.id}}" {{#if (ll-eq c.id ../drug.categoryId)}}selected{{/if}}>{{c.name}}</option>
+            {{/each}}
+         </select>
+      </label>
+
+      <label class="ll-field">
+         <span>{{localize 'LL.ItemSheet.ExposureMethod'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.ExposureMethodTip'}}"></i>
+         </span>
+         <select data-action="change-exposure">
+            <option value="" {{#unless currentExposure}}selected{{/unless}}>{{localize 'LL.ItemSheet.None'}}</option>
+            {{#each exposureMethods as |exp|}}
+               <option value="{{exp.slug}}" {{#if (ll-eq exp.slug ../currentExposure)}}selected{{/if}}>{{exp.label}}</option>
+            {{/each}}
+         </select>
+      </label>
+
+      <label class="ll-field">
+         <span>{{localize 'LL.ItemSheet.TV'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.TVTip'}}"></i>
+         </span>
+         <input type="number" min="0" data-ll-path="tv" value="{{drug.tv}}" />
+      </label>
+
+      <label class="ll-field">
+         <span>{{localize 'LL.ItemSheet.FortDC'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.FortDCTip'}}"></i>
+         </span>
+         <input type="number" min="0" data-ll-path="fortitudeDC" value="{{drug.fortitudeDC}}" placeholder="{{localize 'LL.ItemSheet.FortDCPlaceholder'}}" />
+      </label>
+
+      <label class="ll-field">
+         <span>{{localize 'LL.ItemSheet.Damage'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.DamageTip'}}"></i>
+         </span>
+         <input type="text" data-ll-path="damagePerTv.formula" value="{{drug.damagePerTv.formula}}" placeholder="{{localize 'LL.ItemSheet.DamagePlaceholder'}}" />
+      </label>
+
+      <label class="ll-field">
+         <span>{{localize 'LL.ItemSheet.DamageType'}}</span>
+         <select data-ll-path="damagePerTv.damageType">
+            {{#each damageTypes as |t|}}
+               <option value="{{t}}" {{#if (ll-eq t ../drug.damagePerTv.damageType)}}selected{{/if}}>{{t}}</option>
+            {{/each}}
+         </select>
+      </label>
+
+      <label class="ll-field ll-field--inline">
+         <input type="checkbox" data-ll-path="potent" {{#if drug.potent}}checked{{/if}} />
+         <span>{{localize 'LL.ItemSheet.Potent'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.PotentTip'}}"></i>
+         </span>
+      </label>
+
+      <label class="ll-field ll-field--inline">
+         <input type="checkbox" data-ll-path="addictive" {{#if drug.addictive}}checked{{/if}} />
+         <span>{{localize 'LL.ItemSheet.Addictive'}}
+            <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.AddictiveTip'}}"></i>
+         </span>
+      </label>
+   </div>
+
+   {{#if drug.addictive}}
+   <fieldset class="ll-fieldset" style="margin-top: 0.6em;">
+      <legend>{{localize 'LL.ItemSheet.APYield'}}
+         <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.ItemSheet.APYieldTip'}}"></i>
+      </legend>
+      <div class="ll-grid ll-grid--4">
+         <label class="ll-field">
+            <span>{{localize 'LL.DOS.CritFailure'}}</span>
+            <input type="number" data-ll-path="apYieldCriticalFailure" value="{{drug.apYieldCriticalFailure}}" />
+         </label>
+         <label class="ll-field">
+            <span>{{localize 'LL.DOS.Failure'}}</span>
+            <input type="number" data-ll-path="apYieldFailure" value="{{drug.apYieldFailure}}" />
+         </label>
+         <label class="ll-field">
+            <span>{{localize 'LL.DOS.Success'}}</span>
+            <input type="number" data-ll-path="apYieldSuccess" value="{{drug.apYieldSuccess}}" />
+         </label>
+         <label class="ll-field">
+            <span>{{localize 'LL.DOS.CritSuccess'}}</span>
+            <input type="number" data-ll-path="apYieldCriticalSuccess" value="{{drug.apYieldCriticalSuccess}}" />
+         </label>
+      </div>
+   </fieldset>
+   {{/if}}
+
+   <details class="ll-drug-tab__sfx" style="margin-top: 0.6em;">
+      <summary>
+         <i class="fas fa-volume-high"></i> {{localize 'LL.ItemSheet.SFXHeader'}}
+      </summary>
+      <div class="ll-drug-tab__sfx-body">
+         {{#each sfxRows as |row|}}
+            <fieldset class="ll-sfx-row">
+               <legend>{{row.label}}</legend>
+               <div class="ll-file-row">
+                  <input type="text"
+                         data-ll-path="sfx.{{row.key}}"
+                         value="{{lookup ../drug.sfx row.key}}"
+                         placeholder="{{localize 'LL.ItemSheet.SFXPlaceholder' key=row.key}}" />
+                  <button type="button" class="ll-icon-btn"
+                          data-action="pick-sfx-drug"
+                          data-sfx-key="{{row.key}}"
+                          data-tooltip="{{localize 'LL.ItemSheet.SFX.Browse'}}">
+                     <i class="fas fa-file-audio"></i>
+                  </button>
+                  <button type="button" class="ll-icon-btn"
+                          data-action="preview-sfx-drug"
+                          data-sfx-key="{{row.key}}"
+                          data-tooltip="{{localize 'LL.ItemSheet.SFX.Preview'}}">
+                     <i class="fas fa-play"></i>
+                  </button>
+                  <button type="button" class="ll-icon-btn ll-icon-btn--danger"
+                          data-action="clear-sfx-drug"
+                          data-sfx-key="{{row.key}}"
+                          data-tooltip="{{localize 'LL.ItemSheet.SFX.Clear'}}">
+                     <i class="fas fa-times"></i>
+                  </button>
+               </div>
+            </fieldset>
+         {{/each}}
+      </div>
+   </details>
+
+   {{#unless category}}
+      <p class="ll-help ll-help--warn">
+         <i class="fas fa-triangle-exclamation"></i> {{localize 'LL.ItemSheet.NoCategoryWarn'}}
+      </p>
+   {{/unless}}
+</div>

@@ -1,0 +1,42 @@
+<div class="ll-sound-settings__body">
+   <p class="ll-help">
+      {{localize 'LL.SFX.Help'}}
+   </p>
+
+   <div class="ll-sound-settings__list">
+      {{#each keys as |row|}}
+         <fieldset class="ll-sfx-row">
+            <legend>{{row.label}}</legend>
+            <div class="ll-file-row">
+               <input type="text" data-sfx-key="{{row.key}}"
+                      value="{{lookup ../draft row.key}}"
+                      placeholder="{{localize 'LL.SFX.Placeholder'}}" />
+               <button type="button" class="ll-icon-btn"
+                       data-action="pick-sfx"
+                       data-sfx-key="{{row.key}}"
+                       data-tooltip="{{localize 'LL.SFX.Browse'}}">
+                  <i class="fas fa-file-audio"></i>
+               </button>
+               <button type="button" class="ll-icon-btn"
+                       data-action="preview-sfx"
+                       data-sfx-key="{{row.key}}"
+                       data-tooltip="{{localize 'LL.SFX.Preview'}}">
+                  <i class="fas fa-play"></i>
+               </button>
+               <button type="button" class="ll-icon-btn ll-icon-btn--danger"
+                       data-action="clear-sfx"
+                       data-sfx-key="{{row.key}}"
+                       data-tooltip="{{localize 'LL.SFX.Clear'}}">
+                  <i class="fas fa-times"></i>
+               </button>
+            </div>
+         </fieldset>
+      {{/each}}
+   </div>
+
+   <footer class="ll-registry__save-footer">
+      <button type="button" data-action="save" class="ll-btn ll-btn--giant ll-btn--primary">
+         <i class="fas fa-save"></i> {{localize 'LL.SFX.Save'}}
+      </button>
+   </footer>
+</div>

@@ -1,0 +1,61 @@
+{
+   "id": "pf2e-logans-loophole",
+   "title": "PF2e Logan's Loophole",
+   "description": "Tolerance vs. Toxicity addiction system for PF2e. GM defines Parent Categories of substances; consumable items inherit those rules. Tracks acute Toxicity (the high), chronic Tolerance (the ablative shield), Hangovers, Withdrawal, Recovery, Relapse, and Overdose - all tied to the world clock.",
+   "version": "1.0.0",
+   "compatibility": {
+      "minimum": "13",
+      "verified": "13"
+   },
+   "systems": ["pf2e"],
+   "authors": [
+      {
+         "name": "Logan's Loophole"
+      }
+   ],
+   "esmodules": ["src/main.mjs"],
+   "styles": ["styles/logans-loophole.css"],
+   "languages": [
+      {
+         "lang": "en",
+         "name": "English",
+         "path": "lang/en.json"
+      }
+   ],
+   "packs": [
+      {
+         "name": "logans-loophole-items",
+         "label": "Logan's Loophole Items",
+         "path": "packs/logans-loophole-items",
+         "type": "Item",
+         "system": "pf2e",
+         "ownership": {
+            "PLAYER": "OBSERVER",
+            "ASSISTANT": "OWNER"
+         }
+      },
+      {
+         "name": "logans-loophole-effects",
+         "label": "Logan's Loophole Effects",
+         "path": "packs/logans-loophole-effects",
+         "type": "Item",
+         "system": "pf2e",
+         "ownership": {
+            "PLAYER": "OBSERVER",
+            "ASSISTANT": "OWNER"
+         }
+      },
+      {
+         "name": "logans-loophole-macros",
+         "label": "Logan's Loophole Macros",
+         "path": "packs/logans-loophole-macros",
+         "type": "Macro",
+         "system": "pf2e",
+         "ownership": {
+            "PLAYER": "OBSERVER",
+            "ASSISTANT": "OWNER"
+         }
+      }
+   ],
+   "flags": {}
+}

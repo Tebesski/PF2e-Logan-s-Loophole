@@ -1,0 +1,859 @@
+{
+   "module": "pf2e-logans-loophole",
+   "version": 1,
+   "kind": "category-bundle",
+   "data": [
+      {
+         "id": "106izCtD6yKfVEIW",
+         "name": "Alcohol",
+         "img": "icons/consumables/drinks/alcohol-jug-spirits-brown.webp",
+         "description": "A colorless substance found in drinks like beer, wine, and liquor that acts as a central nervous system depressant, slowing down brain activity.",
+         "rollOptions": "",
+         "acute": {
+            "intoxStages": [
+               {
+                  "tox": 2,
+                  "label": "Buzzed",
+                  "description": "Warm, relaxed, and slightly less observant.",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 30,
+                        "unit": "minutes"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"perception\",\n   \"value\": -1,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Perception"
+                     }
+                  ]
+               },
+               {
+                  "tox": 4,
+                  "label": "Liquie Courage",
+                  "description": "Alcohol lowers inhibitions but dulls the senses.",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 1,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "void"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"saving-throw\"],\n   \"predicate\": [\"fear\"],\n   \"value\": 1,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "+1 to Will vs. Fear"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"perception\"],\n   \"value\": -1,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Perception"
+                     }
+                  ]
+               },
+               {
+                  "tox": 7,
+                  "label": "Drunk",
+                  "description": "Overconfident, swaying, and struggling with quick reactions.",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 1,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"saving-throw\"],\n   \"predicate\": [\"fear\"],\n   \"value\": 2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "+2 to Will vs. Fear"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"dex-based\", \"ac\", \"reflex\"],\n   \"value\": -1,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Dexterity based checks, AC and Reflex"
+                     }
+                  ]
+               },
+               {
+                  "tox": 9,
+                  "label": "Hammered",
+                  "description": "Slurred speech, impaired judgment, and severely compromised coordination.",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 2,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"value\": -2,\n   \"type\": \"item\",\n   \"selector\": [\"cha-skill-check\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Charisma Based skills"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"perception\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Perception"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"dex-based\", \"ac\", \"reflex\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Dexterity based checks, AC and Reflex"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"speed\",\n   \"value\": -5,\n   \"type\": \"item\",\n   \"label\": \"Stumbling\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-5 to Move Speed"
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "stupefied",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/stupefied.webp",
+                        "valued": true
+                     }
+                  ]
+               },
+               {
+                  "tox": 12,
+                  "label": "Wasted",
+                  "description": "Barely conscious, stumbling, and physically ill.",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 2,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"speed\",\n   \"value\": -10,\n   \"type\": \"item\",\n   \"label\": \"Stumbling\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-10 to Move Speed"
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "stupefied",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/stupefied.webp",
+                        "valued": true
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "slowed",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/slowed.webp",
+                        "valued": true
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"value\": -3,\n   \"type\": \"item\",\n   \"selector\": [\"cha-skill-check\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-3 to Charisma based skills"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"perception\"],\n   \"value\": -3,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-3 to Perception"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"dex-based\", \"ac\", \"reflex\"],\n   \"value\": -3,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-3 to Dexterity based checks, AC and Reflex"
+                     }
+                  ]
+               }
+            ],
+            "overdose": {
+               "threshold": 15,
+               "duration": {
+                  "value": 8,
+                  "unit": "hours"
+               },
+               "payload": {
+                  "formula": "",
+                  "damageType": "poison"
+               },
+               "effects": [],
+               "rollOptions": "",
+               "criticalSuccess": {
+                  "reduceToxicity": true,
+                  "reduceAmount": 1,
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": []
+               },
+               "success": {
+                  "reduceToxicity": false,
+                  "reduceAmount": 0,
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": []
+               },
+               "failure": {
+                  "payload": {
+                     "formula": "1d8+2",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"dex-based\", \"ac\", \"reflex\"],\n   \"value\": -3,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-3 to Dexterity based checks, AC and Reflex"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"str-based\", \"str-damage\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Strength based checks and Damage"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"check\", \"dc\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to all Checks and DCs"
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "unconscious",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/unconscious.webp",
+                        "valued": false
+                     }
+                  ]
+               },
+               "criticalFailure": {
+                  "payload": {
+                     "formula": "2d8+2",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "condition",
+                        "slug": "unconscious",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/unconscious.webp",
+                        "valued": false
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"dex-based\", \"ac\", \"reflex\"],\n   \"value\": -3,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-3 to Dexterity based checks, AC and Reflex"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"str-based\", \"str-damage\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Strength based checks and Damage"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"check\", \"dc\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to all Checks and DCs"
+                     }
+                  ]
+               },
+               "dc": 18
+            },
+            "hangover": {
+               "enabled": true,
+               "threshold": 8,
+               "duration": {
+                  "value": 8,
+                  "unit": "hours"
+               },
+               "effects": [],
+               "rollOptions": "",
+               "dc": 15,
+               "failure": {
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"perception\"],\n   \"value\": -1,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Perception"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"initiative\"],\n   \"value\": -1,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Initiative"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"fortitude\"],\n   \"value\": -1,\n   \"type\": \"status\",\n   \"predicate\": [\"auditory\", \"visual\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Fortitude vs. Auditory and Visual"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{ \"key\": \"Weakness\", \"type\": \"sonic\", \"value\": 1 }",
+                        "ruleLabel": "Rule: Weakness",
+                        "ruleDescription": "Weakness 1 to Sonic damage"
+                     }
+                  ]
+               },
+               "criticalFailure": {
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"perception\"],\n   \"value\": -2,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Perception"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"initiative\"],\n   \"value\": -2,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Initiative"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"fortitude\"],\n   \"value\": -2,\n   \"type\": \"status\",\n   \"predicate\": [\"auditory\", \"visual\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Fortitude vs. Auditory and Visual"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{ \"key\": \"Weakness\", \"type\": \"sonic\", \"value\": 3 }",
+                        "ruleLabel": "Rule: Weakness",
+                        "ruleDescription": "Weakness 3 to Sonic damage"
+                     }
+                  ]
+               }
+            },
+            "rollOptions": ""
+         },
+         "chronic": {
+            "baseWillDC": 13,
+            "addictionStages": [
+               {
+                  "apThreshold": 15,
+                  "label": "Stage I",
+                  "description": "",
+                  "maxTolerance": 1,
+                  "willPenalty": 0,
+                  "quitPenalty": 0,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 1,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 2,
+                     "unit": "days"
+                  },
+                  "chronicEffects": [],
+                  "withdrawalEffects": []
+               },
+               {
+                  "apThreshold": 30,
+                  "label": "Stage II",
+                  "description": "",
+                  "maxTolerance": 2,
+                  "willPenalty": 1,
+                  "quitPenalty": 0,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 2,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 1,
+                     "unit": "days"
+                  },
+                  "chronicEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"value\": -1,\n   \"type\": \"status\",\n   \"selector\": \"fortitude\",\n   \"predicate\": [\"poison\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Fortitude vs. Poison"
+                     }
+                  ],
+                  "withdrawalEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"value\": -1,\n   \"type\": \"status\",\n   \"selector\": [\"cha-skill-check\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Charisma based skills"
+                     }
+                  ]
+               },
+               {
+                  "apThreshold": 50,
+                  "label": "Stage III",
+                  "description": "",
+                  "maxTolerance": 3,
+                  "willPenalty": 2,
+                  "quitPenalty": 1,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 4,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 8,
+                     "unit": "hours"
+                  },
+                  "chronicEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"value\": -2,\n   \"type\": \"status\",\n   \"selector\": \"fortitude\",\n   \"predicate\": [\"poison\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Fortitude vs. Poison"
+                     }
+                  ],
+                  "withdrawalEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"thievery\", \"crafting\", \"medicine\"],\n   \"value\": -2,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Thievery, Crafting and Medicine checks"
+                     }
+                  ]
+               },
+               {
+                  "apThreshold": 75,
+                  "label": "Stage IV",
+                  "description": "",
+                  "maxTolerance": 4,
+                  "willPenalty": 3,
+                  "quitPenalty": 2,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 5,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 5,
+                     "unit": "hours"
+                  },
+                  "chronicEffects": [],
+                  "withdrawalEffects": [
+                     {
+                        "type": "condition",
+                        "slug": "confused",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/confused.webp",
+                        "valued": false
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{ \"key\": \"Weakness\", \"type\": \"mental\", \"value\": 3 }",
+                        "ruleLabel": "Rule: Weakness",
+                        "ruleDescription": "Weakness 3 to Mental damage"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"initiative\"],\n   \"value\": -2,\n   \"type\": \"status\",\n   \"label\": \"Paranoia\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Initiative"
+                     }
+                  ]
+               }
+            ],
+            "rollOptions": ""
+         }
+      },
+      {
+         "id": "cNFZHxIgS9szGjAt",
+         "name": "Nicotine",
+         "img": "icons/commodities/flowers/flower-green.webp",
+         "description": "Nicotine is a highly addictive stimulant found naturally in the tobacco plant. It acts on the brain to temporarily boost alertness and mood, creating a \"reward\" feeling that drives addiction. Commonly consumed via smoking or sniffing, it increases heart rate and blood pressure.",
+         "rollOptions": "",
+         "acute": {
+            "intoxStages": [
+               {
+                  "tox": 2,
+                  "label": "Stage I",
+                  "description": "",
+                  "decay": {
+                     "amount": 2,
+                     "per": {
+                        "value": 1,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"perception\",\n   \"value\": 1,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "+1 to Perception"
+                     }
+                  ]
+               },
+               {
+                  "tox": 5,
+                  "label": "Stage II",
+                  "description": "",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 1,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n                       \"key\": \"FlatModifier\",\n                       \"selector\": \"will\",\n                       \"value\": 1,\n                       \"type\": \"item\",\n                       \"predicate\": [\n                         \"emotion\"\n                       ]\n                     }",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "+1 to Will vs. Emotion"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n                       \"key\": \"FlatModifier\",\n                       \"selector\": \"perception\",\n                       \"value\": 1,\n                       \"type\": \"item\"\n                     }",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "+1 to Perception"
+                     }
+                  ]
+               },
+               {
+                  "tox": 9,
+                  "label": "Stage III",
+                  "description": "",
+                  "decay": {
+                     "amount": 2,
+                     "per": {
+                        "value": 1,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "1",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"str-based\", \"str-damage\"],\n   \"value\": -1,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Strength based checks and Strength damage"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"will\",\n   \"value\": 2,\n   \"type\": \"item\",\n   \"predicate\": [\"emotion\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "+2 to Will vs. Emotion"
+                     }
+                  ]
+               },
+               {
+                  "tox": 14,
+                  "label": "Nic-Sick",
+                  "description": "",
+                  "decay": {
+                     "amount": 1,
+                     "per": {
+                        "value": 4,
+                        "unit": "hours"
+                     }
+                  },
+                  "payload": {
+                     "formula": "1d4",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "condition",
+                        "slug": "sickened",
+                        "value": 2,
+                        "img": "systems/pf2e/icons/conditions/sickened.webp",
+                        "valued": true
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "stupefied",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/stupefied.webp",
+                        "valued": true
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"str-based\", \"str-damage\"],\n   \"value\": -2,\n   \"type\": \"item\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Strength based checks and Strength damage"
+                     }
+                  ]
+               }
+            ],
+            "overdose": {
+               "threshold": 15,
+               "dc": 20,
+               "rollOptions": "death",
+               "description": "",
+               "duration": {
+                  "value": 12,
+                  "unit": "hours"
+               },
+               "criticalSuccess": {
+                  "reduceToxicity": false,
+                  "reduceAmount": 2,
+                  "payload": {
+                     "formula": "",
+                     "damageType": "poison"
+                  },
+                  "effects": []
+               },
+               "success": {
+                  "reduceToxicity": true,
+                  "reduceAmount": 1,
+                  "payload": {
+                     "formula": "1d4",
+                     "damageType": "poison"
+                  },
+                  "effects": []
+               },
+               "failure": {
+                  "payload": {
+                     "formula": "4d4",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "condition",
+                        "slug": "sickened",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/sickened.webp",
+                        "valued": true
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "stupefied",
+                        "value": 1,
+                        "img": "systems/pf2e/icons/conditions/stupefied.webp",
+                        "valued": true
+                     }
+                  ]
+               },
+               "criticalFailure": {
+                  "payload": {
+                     "formula": "6d4+8",
+                     "damageType": "poison"
+                  },
+                  "effects": [
+                     {
+                        "type": "condition",
+                        "slug": "sickened",
+                        "value": 2,
+                        "img": "systems/pf2e/icons/conditions/sickened.webp",
+                        "valued": true
+                     },
+                     {
+                        "type": "condition",
+                        "slug": "stupefied",
+                        "value": 2,
+                        "img": "systems/pf2e/icons/conditions/stupefied.webp",
+                        "valued": true
+                     }
+                  ]
+               }
+            },
+            "hangover": {
+               "enabled": false,
+               "threshold": 0,
+               "dc": 15,
+               "rollOptions": "",
+               "description": "",
+               "duration": {
+                  "value": 1,
+                  "unit": "hours"
+               },
+               "failure": {
+                  "effects": []
+               },
+               "criticalFailure": {
+                  "effects": []
+               }
+            }
+         },
+         "chronic": {
+            "baseWillDC": 16,
+            "addictionStages": [
+               {
+                  "apThreshold": 7,
+                  "label": "Stage I",
+                  "description": "",
+                  "maxTolerance": 1,
+                  "willPenalty": 1,
+                  "quitPenalty": 1,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 2,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 6,
+                     "unit": "hours"
+                  },
+                  "chronicEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"ActiveEffectLike\",\n   \"mode\": \"add\",\n   \"path\": \"flags.system.remainingAir.rounds\",\n   \"value\": -2\n}\n",
+                        "ruleLabel": "Rule: ActiveEffectLike",
+                        "ruleDescription": "Reduce the amount of rounds you can Hold Breath by 2."
+                     }
+                  ],
+                  "withdrawalEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"perception\",\n   \"value\": -1,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Perception"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"will\",\n   \"value\": -1,\n   \"type\": \"status\",\n   \"predicate\": [\"emotion\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Will vs. Emotion"
+                     }
+                  ]
+               },
+               {
+                  "apThreshold": 14,
+                  "label": "Stage II",
+                  "description": "",
+                  "maxTolerance": 2,
+                  "willPenalty": 2,
+                  "quitPenalty": 2,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 4,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 3,
+                     "unit": "hours"
+                  },
+                  "chronicEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"ActiveEffectLike\",\n   \"mode\": \"add\",\n   \"path\": \"flags.system.remainingAir.rounds\",\n   \"value\": -4\n}",
+                        "ruleLabel": "Rule: ActiveEffectLike",
+                        "ruleDescription": "Reduce the amount of rounds you can Hold Breath by 4."
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"fortitude\",\n   \"value\": -1,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Fortitude"
+                     }
+                  ],
+                  "withdrawalEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"perception\",\n   \"value\": -2,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Perception"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"will\",\n   \"value\": -2,\n   \"type\": \"status\",\n   \"predicate\": [\"emotion\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Will vs. Emotion"
+                     }
+                  ]
+               },
+               {
+                  "apThreshold": 30,
+                  "label": "Chain Smoker",
+                  "description": "",
+                  "maxTolerance": 3,
+                  "willPenalty": 3,
+                  "quitPenalty": 3,
+                  "apDecayAmount": 1,
+                  "apDecayPer": {
+                     "value": 8,
+                     "unit": "days"
+                  },
+                  "satiation": {
+                     "value": 1,
+                     "unit": "hours"
+                  },
+                  "chronicEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"ActiveEffectLike\",\n   \"mode\": \"add\",\n   \"path\": \"flags.system.remainingAir.rounds\",\n   \"value\": -6\n}",
+                        "ruleLabel": "Rule: ActiveEffectLike",
+                        "ruleDescription": "Reduce the amount of rounds you can Hold Breath by 6."
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": \"fortitude\",\n   \"value\": -2,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-2 to Fortitude"
+                     }
+                  ],
+                  "withdrawalEffects": [
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"value\": -1,\n   \"type\": \"status\",\n   \"selector\": [\"cha-skill-check\"]\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Charisma based skills"
+                     },
+                     {
+                        "type": "rule",
+                        "ruleJson": "{\n   \"key\": \"FlatModifier\",\n   \"selector\": [\"thievery\", \"crafting\", \"medicine\"],\n   \"value\": -1,\n   \"type\": \"status\"\n}",
+                        "ruleLabel": "Rule: FlatModifier",
+                        "ruleDescription": "-1 to Thievery, Crafting and Medicine"
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   ]
+}

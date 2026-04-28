@@ -1,0 +1,178 @@
+<div class="ll-hud">
+   {{#if rows.length}}
+      {{#each rows as |row|}}
+         <article class="ll-hud-row {{#if row.unbound}}ll-hud-row--unbound{{/if}}">
+            <header class="ll-hud-row__head">
+               <img src="{{row.categoryImg}}" />
+               <h3>{{row.categoryName}}</h3>
+               {{#if row.quitPenalty}}
+                  <span class="ll-tag ll-tag--ghost" title="{{localize 'LL.HUD.QuitPenaltyTip' penalty=row.quitPenalty}}">
+                     <i class="fas fa-ghost"></i> {{localize 'LL.HUD.QuitPenalty' penalty=row.quitPenalty}}
+                  </span>
+               {{/if}}
+               {{#if row.hangoverPending}}
+                  <span class="ll-tag ll-tag--warn" title="{{localize 'LL.HUD.HangoverQueued'}}">{{localize 'LL.HUD.HangoverQueued'}}</span>
+               {{/if}}
+               {{#if row.hasImmunity}}
+                  <span class="ll-tag" style="background: var(--ll-good); color: #fff; border-color: var(--ll-good);" title="{{localize 'LL.HUD.ImmunityTip'}}">
+                     <i class="fas fa-shield-virus"></i> {{localize 'LL.HUD.ImmunityLabel' label=row.immunityLabel}}
+                  </span>
+               {{/if}}
+               {{#if row.unbound}}
+                  <span class="ll-tag ll-tag--warn">{{localize 'LL.HUD.Unbound'}}</span>
+               {{/if}}
+            </header>
+
+            {{#unless row.unbound}}
+            <div class="ll-hud-row__grid">
+
+               <div class="ll-hud-block">
+                  <div class="ll-hud-block__head">
+                     <span>{{localize 'LL.HUD.Tolerance'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.ToleranceTip'}}"></i></span>
+                     <span class="ll-hud-block__numeric">{{row.tolerance}} / {{row.maxTol}}</span>
+                  </div>
+                  <div class="ll-pips">
+                     {{#each row.tolPips as |filled|}}
+                        <i class="fa-solid {{#if filled}}fa-shield is-filled{{else}}fa-shield-slash is-expended{{/if}} ll-pip"></i>
+                     {{/each}}
+                  </div>
+                  <div class="ll-hud-block__btns">
+                     <button type="button" class="ll-icon-btn" data-ll-action="tol-minus" data-category-id="{{row.categoryId}}">
+                        <i class="fas fa-minus"></i>
+                     </button>
+                     <button type="button" class="ll-icon-btn" data-ll-action="tol-plus" data-category-id="{{row.categoryId}}">
+                        <i class="fas fa-plus"></i>
+                     </button>
+                  </div>
+               </div>
+
+               <div class="ll-hud-block">
+                  <div class="ll-hud-block__head">
+                     <span>{{localize 'LL.HUD.Toxicity'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.ToxicityTip'}}"></i></span>
+                     <span class="ll-hud-block__numeric">{{row.toxicity}} / {{row.maxBarTox}}</span>
+                  </div>
+                  <div class="ll-bar ll-bar--relative">
+                     <div class="ll-bar__fill {{#if (ll-and (ll-gt row.overdoseTox 0) (ll-gte row.toxicity row.overdoseTox))}}is-overdose{{/if}}"
+                          style="width: {{row.toxPercent}}%;"></div>
+                     {{#each row.intoxMarkers as |marker|}}
+                        <div class="ll-bar__marker" style="left: {{marker.percent}}%;"
+                             data-tooltip="{{marker.label}} (TV: {{marker.threshold}})">
+                           <i class="fas fa-caret-up"></i>
+                        </div>
+                     {{/each}}
+                  </div>
+                  
+                  <div class="ll-hud-meta ll-hud-meta--stage">
+                     {{#if row.hasOverdoseEffect}}
+                        <span class="ll-text--overdose">{{localize 'LL.HUD.Overdose'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.OverdoseTip'}}"></i></span>
+                     {{else if (ll-and (ll-gt row.overdoseTox 0) (ll-gte row.toxicity row.overdoseTox))}}
+                        <span class="ll-text--overdose">{{localize 'LL.HUD.Overdose'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.OverdoseTip'}}"></i></span>
+                     {{else}}
+                        <span class="ll-stage-name">{{row.intoxLabel}} {{row.intoxTimeLabel}}</span>
+                     {{/if}}
+                  </div>
+
+                  <div class="ll-hud-block__btns">
+                     <button type="button" class="ll-icon-btn" data-ll-action="tox-minus" data-category-id="{{row.categoryId}}" title="{{localize 'LL.Buttons.ToxMinus'}}">
+                        <i class="fas fa-minus"></i>
+                     </button>
+                     <button type="button" class="ll-icon-btn" data-ll-action="tox-plus" data-category-id="{{row.categoryId}}" title="{{localize 'LL.Buttons.ToxPlus'}}">
+                        <i class="fas fa-plus"></i>
+                     </button>
+                  </div>
+               </div>
+
+               <div class="ll-hud-block">
+                  <div class="ll-hud-block__head">
+                     <span>{{localize 'LL.HUD.Addiction'}} <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.AddictionTip'}}"></i></span>
+                     <span class="ll-hud-block__numeric">
+                        {{row.addictionPoints}}{{#if row.nextThreshold}} / {{row.nextThreshold}}{{/if}}
+                     </span>
+                  </div>
+                  {{#if row.showApBar}}
+                     <div class="ll-bar">
+                        <div class="ll-bar__fill {{#if row.isMaxAddiction}}is-maxed{{/if}}" style="width: {{row.apPercent}}%;"></div>
+                     </div>
+                  {{/if}}
+                  {{#if (ll-gt row.addictionPoints 0)}}
+                     {{#if (ll-gt row.addictionStage 0)}}
+                        <div class="ll-hud-meta ll-hud-meta--stage">
+                           <span class="ll-stage-name">{{row.addictionStageLabel}}</span>
+                        </div>
+                     {{/if}}
+                     <div class="ll-hud-meta">
+                        {{#if row.isSatiated}}
+                           <span class="ll-text--satiated">
+                              <i class="fas fa-bottle-droplet"></i> {{localize 'LL.HUD.Satiated'}} {{row.satiatedTimeLabel}} 
+                              <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.SatiatedTip'}}"></i>
+                           </span>
+                        {{else if (ll-gt row.withdrawalStage 0)}}
+                           <span class="ll-text--unsatiated">
+                              {{localize 'LL.HUD.WithdrawalLabel'}}
+                              {{#if row.decayLabel}}
+                                 {{#if row.isApPaused}}
+                                    <i class="fas fa-circle-pause ll-info" data-tooltip="{{localize 'LL.HUD.APDecayPaused' time=row.apPausedTimeLabel}}"></i>
+                                 {{else}}
+                                    <i class="fas fa-arrow-trend-down ll-info" data-tooltip="{{localize 'LL.HUD.DecayingAt' rate=row.decayLabel}}"></i>
+                                 {{/if}}
+                              {{/if}}
+                              <i class="fas fa-circle-info ll-info" data-tooltip="{{localize 'LL.HUD.WithdrawalTip'}}"></i>
+                           </span>
+                        {{/if}}
+                     </div>
+                  {{/if}}
+                  <div class="ll-hud-block__btns">
+                     <button type="button" class="ll-icon-btn" data-ll-action="ap-minus" data-category-id="{{row.categoryId}}" title="{{localize 'LL.Buttons.APMinus'}}">
+                        <i class="fas fa-minus"></i>
+                     </button>
+                     <button type="button" class="ll-icon-btn" data-ll-action="ap-plus" data-category-id="{{row.categoryId}}" title="{{localize 'LL.Buttons.APPlus'}}">
+                        <i class="fas fa-plus"></i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            {{#if ../canControl}}
+               <footer class="ll-hud-row__footer">
+                  {{#if (ll-gt row.addictionStage 0)}}
+                     {{#if row.isSatiated}}
+                        <button type="button" class="ll-btn" data-ll-action="force-unsatiate" data-category-id="{{row.categoryId}}">{{localize 'LL.Buttons.ForceUnsatiate'}}</button>
+                     {{else}}
+                        <button type="button" class="ll-btn" data-ll-action="satiate" data-category-id="{{row.categoryId}}">{{localize 'LL.Buttons.ForceSatiate'}}</button>
+                     {{/if}}
+                  {{/if}}
+
+                  <button type="button" class="ll-btn" data-ll-action="manage-immunities" data-category-id="{{row.categoryId}}">
+                     {{localize 'LL.Buttons.ManageImmunities'}}
+                  </button>
+
+                  {{#if row.quitPenalty}}
+                     <button type="button" class="ll-btn" data-ll-action="cure-penalty" data-category-id="{{row.categoryId}}">{{localize 'LL.Buttons.CurePenalty'}}</button>
+                  {{/if}}
+                  {{#if (ll-or row.hangoverPending row.hasHangoverEffect)}}
+                     <button type="button" class="ll-btn" data-ll-action="cure-hangover" data-category-id="{{row.categoryId}}">{{localize 'LL.Buttons.CureHangover'}}</button>
+                  {{/if}}
+                  {{#if row.hasOverdoseEffect}}
+                     <button type="button" class="ll-btn ll-btn--danger" data-ll-action="cure-overdose" data-category-id="{{row.categoryId}}">{{localize 'LL.Buttons.CureOverdose'}}</button>
+                  {{/if}}
+                  <button type="button" class="ll-btn ll-btn--good" data-ll-action="cure" data-category-id="{{row.categoryId}}">
+                     {{#if (ll-gt row.addictionStage 0)}}{{localize 'LL.Buttons.Cure'}}{{else}}{{localize 'LL.Buttons.Remove'}}{{/if}}
+                  </button>
+               </footer>
+            {{/if}}
+            {{/unless}}
+
+            {{#if row.unbound}}
+               <p class="ll-help ll-help--warn">
+                  {{localize 'LL.HUD.StaleState'}}
+               </p>
+               <footer class="ll-hud-row__footer">
+                  <button type="button" class="ll-btn ll-btn--danger" data-ll-action="remove-category" data-category-id="{{row.categoryId}}">{{localize 'LL.Buttons.ClearState'}}</button>
+               </footer>
+            {{/if}}
+         </article>
+      {{/each}}
+   {{else}}
+      <p class="ll-empty">{{localize 'LL.HUD.NoAddictions'}}</p>
+   {{/if}}
+</div>

@@ -1,0 +1,78 @@
+<fieldset class="ll-effects" data-effects-path="{{path}}">
+   <legend>
+      {{label}}
+      {{#if tip}}<i class="fas fa-circle-info ll-info" data-tooltip="{{tip}}"></i>{{/if}}
+   </legend>
+
+   <div class="ll-effects__list">
+      {{#each effects as |eff idx|}}
+         <div class="ll-effect" data-type="{{eff.type}}">
+            {{#if (ll-eq eff.type "condition")}}
+               {{#if eff.img}}
+                  <img src="{{eff.img}}" class="ll-effect__icon" />
+               {{else}}
+                  <span class="ll-effect__icon-placeholder"><i class="fas fa-circle-question"></i></span>
+               {{/if}}
+               <select class="ll-effect__slug" data-ll-path="{{../path}}.{{idx}}.slug">
+                  {{#each ../conditionsAll as |c|}}
+                     <option value="{{c.slug}}" {{#if (ll-eq c.slug eff.slug)}}selected{{/if}}>{{c.label}}</option>
+                  {{/each}}
+               </select>
+               {{#if eff.valued}}
+                  <input type="number" min="1" class="ll-effect__val" data-ll-path="{{../path}}.{{idx}}.value" value="{{eff.value}}" />
+               {{/if}}
+            {{else if (ll-eq eff.type "uuid")}}
+               {{#if eff.img}}
+                  <img src="{{eff.img}}" class="ll-effect__icon" />
+               {{else}}
+                  <span class="ll-effect__icon-placeholder"><i class="fas fa-triangle-exclamation"></i></span>
+               {{/if}}
+               <input type="text" class="ll-effect__uuid" placeholder="Item.someRandomUUIDHere" data-ll-path="{{../path}}.{{idx}}.uuid" value="{{eff.uuid}}" />
+               <span class="ll-effect__resolved {{#unless eff.resolvedName}}ll-effect__resolved--missing{{/unless}}">
+                  {{#if eff.resolvedName}}
+                     <a class="ll-effect__link" data-action="open-effect" data-uuid="{{eff.uuid}}" title="{{localize 'LL.Effects.ViewDetails'}}">{{eff.resolvedName}}</a>
+                  {{else}}
+                     <em>{{localize 'LL.Effects.NotFound'}}</em>
+                  {{/if}}
+               </span>
+            {{else if (ll-eq eff.type "rule")}}
+               <div class="ll-effect__rule">
+                  <div class="ll-effect__rule-header">
+                     <span class="ll-effect__icon-placeholder"><i class="fas fa-code"></i></span>
+                     <span class="ll-effect__rule-label">{{#if eff.ruleLabel}}{{eff.ruleLabel}}{{else}}{{localize 'LL.Effects.RuleElement'}}{{/if}}</span>
+                     <span class="ll-effect__rule-status" data-ll-rule-status></span>
+                     <button type="button" class="ll-icon-btn ll-icon-btn--danger ll-icon-btn--small ll-effect__rule-remove" data-action="remove-effect" data-path="{{../path}}" data-index="{{idx}}" data-tooltip="{{localize 'LL.Effects.Remove'}}">
+                        <i class="fas fa-times"></i>
+                     </button>
+                  </div>
+                  <textarea
+                     class="ll-effect__rule-json"
+                     data-ll-path="{{../path}}.{{idx}}.ruleJson"
+                     spellcheck="false"
+                     rows="4"
+                     placeholder='{"key": "FlatModifier", ...}'>{{eff.ruleJson}}</textarea>
+                  <input
+                     type="text"
+                     class="ll-effect__rule-description"
+                     data-ll-path="{{../path}}.{{idx}}.ruleDescription"
+                     placeholder="{{localize 'LL.Effects.RuleDescriptionPlaceholder'}}"
+                     value="{{eff.ruleDescription}}" />
+               </div>
+            {{/if}}
+
+            {{#unless (ll-eq eff.type "rule")}}
+               <button type="button" class="ll-icon-btn ll-icon-btn--danger ll-icon-btn--small" data-action="remove-effect" data-path="{{../path}}" data-index="{{idx}}" data-tooltip="{{localize 'LL.Effects.Remove'}}">
+                  <i class="fas fa-times"></i>
+               </button>
+            {{/unless}}
+         </div>
+      {{/each}}
+   </div>
+
+   <div class="ll-effects__add">
+      <button type="button" class="ll-btn ll-btn--small" data-action="add-effect-condition" data-path="{{path}}"><i class="fas fa-plus"></i> {{localize 'LL.Effects.Condition'}}</button>
+      <button type="button" class="ll-btn ll-btn--small" data-action="add-effect-uuid" data-path="{{path}}"><i class="fas fa-plus"></i> {{localize 'LL.Effects.UUID'}}</button>
+      <button type="button" class="ll-btn ll-btn--small" data-action="add-effect-rule" data-path="{{path}}"><i class="fas fa-plus"></i> {{localize 'LL.Effects.RuleElement'}}</button>
+      <span class="ll-effects__drop-hint"><i class="fas fa-download"></i> {{localize 'LL.Effects.DropHint'}}</span>
+   </div>
+</fieldset>

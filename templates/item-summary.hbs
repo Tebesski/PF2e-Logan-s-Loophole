@@ -1,0 +1,385 @@
+<section class="ll-summary">
+   <header class="ll-summary__head">
+      <img src="{{category.img}}" />
+      <h3>{{category.name}}</h3>
+   </header>
+
+   {{#if category.description}}
+      <p class="ll-summary__desc">{{category.description}}</p>
+   {{/if}}
+
+   <div class="ll-summary__row">
+      <strong>{{localize "LL.Summary.TV"}}</strong>
+      {{drug.tv}}
+      {{localize "LL.Summary.PerDose"}}
+      <i
+         class="fas fa-circle-info ll-info"
+         data-tooltip="{{localize 'LL.Summary.TVTip'}}"
+      ></i>
+      {{#if drug.potent}}<span
+            class="ll-tag ll-tag--warn"
+            data-tooltip="{{localize 'LL.Summary.PotentTip'}}"
+         >{{localize "LL.Summary.Potent"}}</span>{{/if}}
+      {{#unless drug.addictive}}<span
+            class="ll-tag"
+            data-tooltip="{{localize 'LL.Summary.NonAddictiveTip'}}"
+         >{{localize "LL.Summary.NonAddictive"}}</span>{{/unless}}
+   </div>
+
+   {{#if category.acute.intoxStages.length}}
+      <details class="ll-summary__section ll-summary__section--intox">
+         <summary>
+            <i class="fas fa-bottle-droplet"></i>
+            {{localize "LL.Summary.IntoxicationStages"}}
+            <i
+               class="fas fa-circle-info ll-info"
+               data-tooltip="{{localize 'LL.Summary.IntoxicationStagesTip'}}"
+            ></i>
+         </summary>
+         <div class="ll-summary__section-body">
+            <table class="ll-summary__table">
+               <thead><tr><th>{{localize "LL.Summary.Stage"}}</th><th>{{localize
+                           "LL.Summary.GteTV"
+                        }}</th><th>{{localize "LL.Summary.Decay"}}</th><th
+                     >{{localize "LL.Summary.Payload"}}</th><th>{{localize
+                           "LL.Summary.Effects"
+                        }}</th></tr></thead>
+               <tbody>
+                  {{#each category.acute.intoxStages as |stg idx|}}
+                     <tr>
+                        <td>{{stg.label}}</td>
+                        <td>{{stg.tox}}</td>
+                        <td>{{stg.decay.amount}}
+                           /
+                           {{stg.decay.per.value}}
+                           {{stg.decay.per.unit}}</td>
+                        <td>{{#if stg.payload.formula}}{{stg.payload.formula}}
+                              {{stg.payload.damageType}}{{else}}{{localize
+                                 "LL.Summary.Empty"
+                              }}{{/if}}</td>
+                        <td>
+                           <div
+                              style="display: flex; gap: 0.25em; flex-wrap: wrap;"
+                           >
+                              {{#each stg.effects}}
+                                 {{{this.html}}}
+                              {{else}}
+                                 <em>{{localize "LL.Summary.Empty"}}</em>
+                              {{/each}}
+                           </div>
+                        </td>
+                     </tr>
+                  {{/each}}
+               </tbody>
+            </table>
+         </div>
+      </details>
+   {{/if}}
+
+   <details class="ll-summary__section ll-summary__section--danger">
+      <summary>
+         <i class="fas fa-skull-crossbones"></i>
+         {{localize "LL.Summary.Overdose"}}
+         <i
+            class="fas fa-circle-info ll-info"
+            data-tooltip="{{localize 'LL.Summary.OverdoseTip'}}"
+         ></i>
+      </summary>
+      <div class="ll-summary__section-body">
+         <div class="ll-summary__row" style="margin-bottom: 0.5em;">
+            <strong>{{localize "LL.Summary.Threshold"}}</strong>
+            {{category.acute.overdose.threshold}}
+            {{localize "LL.Summary.TVUnit"}}
+            &nbsp;|&nbsp;
+            <strong>{{localize "LL.Summary.FortitudeDC"}}</strong>
+            {{category.acute.overdose.dc}}
+            &nbsp;|&nbsp;
+            <strong>{{localize "LL.Summary.Duration"}}</strong>
+            {{category.acute.overdose.duration.value}}
+            {{category.acute.overdose.duration.unit}}
+         </div>
+         <table class="ll-summary__table">
+            <thead><tr><th>{{localize "LL.Summary.SaveOutcome"}}</th><th
+                  >{{localize "LL.Summary.Damage"}}</th><th>{{localize
+                        "LL.Summary.ToxicityShed"
+                     }}</th><th>{{localize
+                        "LL.Summary.Effects"
+                     }}</th></tr></thead>
+            <tbody>
+               <tr>
+                  <td style="color: var(--ll-good, #4caf50);"><strong>{{localize
+                           "LL.DOS.CritSuccess"
+                        }}</strong></td>
+                  <td>{{#if
+                        category.acute.overdose.criticalSuccess.payload.formula
+                     }}{{category.acute.overdose.criticalSuccess.payload.formula}}
+                        {{category.acute.overdose.criticalSuccess.payload.damageType}}{{else}}{{localize
+                           "LL.Summary.Empty"
+                        }}{{/if}}</td>
+                  <td>{{#if
+                        category.acute.overdose.criticalSuccess.reduceToxicity
+                     }}{{category.acute.overdose.criticalSuccess.reduceAmount}}
+                        {{localize "LL.Summary.TVUnit"}}{{else}}{{localize
+                           "LL.Summary.Empty"
+                        }}{{/if}}</td>
+                  <td>
+                     <div style="display: flex; gap: 0.25em; flex-wrap: wrap;">
+                        {{#each
+                           category.acute.overdose.criticalSuccess.effects
+                        }}{{{this.html}}}{{else}}{{localize
+                              "LL.Summary.Empty"
+                           }}{{/each}}
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td style="color: var(--ll-good, #4caf50);"><strong>{{localize
+                           "LL.DOS.Success"
+                        }}</strong></td>
+                  <td>{{#if
+                        category.acute.overdose.success.payload.formula
+                     }}{{category.acute.overdose.success.payload.formula}}
+                        {{category.acute.overdose.success.payload.damageType}}{{else}}{{localize
+                           "LL.Summary.Empty"
+                        }}{{/if}}</td>
+                  <td>{{#if
+                        category.acute.overdose.success.reduceToxicity
+                     }}{{category.acute.overdose.success.reduceAmount}}
+                        {{localize "LL.Summary.TVUnit"}}{{else}}{{localize
+                           "LL.Summary.Empty"
+                        }}{{/if}}</td>
+                  <td>
+                     <div style="display: flex; gap: 0.25em; flex-wrap: wrap;">
+                        {{#each
+                           category.acute.overdose.success.effects
+                        }}{{{this.html}}}{{else}}{{localize
+                              "LL.Summary.Empty"
+                           }}{{/each}}
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td style="color: var(--ll-danger, #f44336);"><strong
+                     >{{localize "LL.DOS.Failure"}}</strong></td>
+                  <td>{{#if
+                        category.acute.overdose.failure.payload.formula
+                     }}{{category.acute.overdose.failure.payload.formula}}
+                        {{category.acute.overdose.failure.payload.damageType}}{{else}}{{localize
+                           "LL.Summary.Empty"
+                        }}{{/if}}</td>
+                  <td>{{localize "LL.Summary.Empty"}}</td>
+                  <td>
+                     <div style="display: flex; gap: 0.25em; flex-wrap: wrap;">
+                        {{#each
+                           category.acute.overdose.failure.effects
+                        }}{{{this.html}}}{{else}}{{localize
+                              "LL.Summary.Empty"
+                           }}{{/each}}
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td style="color: var(--ll-danger, #f44336);"><strong
+                     >{{localize "LL.DOS.CritFailure"}}</strong></td>
+                  <td>{{#if
+                        category.acute.overdose.criticalFailure.payload.formula
+                     }}{{category.acute.overdose.criticalFailure.payload.formula}}
+                        {{category.acute.overdose.criticalFailure.payload.damageType}}{{else}}{{localize
+                           "LL.Summary.Empty"
+                        }}{{/if}}</td>
+                  <td>{{localize "LL.Summary.Empty"}}</td>
+                  <td>
+                     <div style="display: flex; gap: 0.25em; flex-wrap: wrap;">
+                        {{#each
+                           category.acute.overdose.criticalFailure.effects
+                        }}{{{this.html}}}{{else}}{{localize
+                              "LL.Summary.Empty"
+                           }}{{/each}}
+                     </div>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </details>
+
+   {{#if category.acute.hangover.enabled}}
+      <details class="ll-summary__section ll-summary__section--hangover">
+         <summary>
+            <i class="fas fa-bed"></i>
+            {{localize "LL.Summary.Hangover"}}
+            <i
+               class="fas fa-circle-info ll-info"
+               data-tooltip="{{localize 'LL.Summary.HangoverTip'}}"
+            ></i>
+         </summary>
+         <div class="ll-summary__section-body">
+            <div class="ll-summary__row">
+               <strong>{{localize "LL.Summary.Trigger"}}</strong>
+               {{localize "LL.Summary.IfToxicityPasses"}}
+               {{category.acute.hangover.threshold}}
+               {{localize "LL.Summary.TVUnit"}}
+            </div>
+            <div class="ll-summary__row">
+               <strong>{{localize "LL.Summary.FortitudeDC"}}</strong>
+               {{category.acute.hangover.dc}}
+            </div>
+            <div class="ll-summary__row">
+               <strong>{{localize "LL.Summary.Duration"}}</strong>
+               {{category.acute.hangover.duration.value}}
+               {{category.acute.hangover.duration.unit}}
+               {{localize "LL.Summary.AfterSobering"}}
+            </div>
+            <table class="ll-summary__table" style="margin-top: 0.5em;">
+               <thead><tr><th>{{localize "LL.Summary.SaveOutcome"}}</th><th
+                     >{{localize "LL.Summary.Effects"}}</th></tr></thead>
+               <tbody>
+                  <tr>
+                     <td style="color: var(--ll-good, #4caf50);"><strong
+                        >{{localize
+                              "LL.Summary.CritSuccessOrSuccess"
+                           }}</strong></td>
+                     <td><em>{{localize "LL.Summary.NoHangover"}}</em></td>
+                  </tr>
+                  <tr>
+                     <td style="color: var(--ll-danger, #f44336);"><strong
+                        >{{localize "LL.DOS.Failure"}}</strong></td>
+                     <td>
+                        <div
+                           style="display: flex; gap: 0.25em; flex-wrap: wrap;"
+                        >
+                           {{#each
+                              category.acute.hangover.failure.effects
+                           }}{{{this.html}}}{{else}}{{localize
+                                 "LL.Summary.Empty"
+                              }}{{/each}}
+                        </div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="color: var(--ll-danger, #f44336);"><strong
+                        >{{localize "LL.DOS.CritFailure"}}</strong></td>
+                     <td>
+                        <div
+                           style="display: flex; gap: 0.25em; flex-wrap: wrap;"
+                        >
+                           {{#each
+                              category.acute.hangover.criticalFailure.effects
+                           }}{{{this.html}}}{{else}}{{localize
+                                 "LL.Summary.Empty"
+                              }}{{/each}}
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </details>
+   {{/if}}
+
+   {{#if drug.addictive}}
+      {{#if category.chronic.addictionStages.length}}
+         <details class="ll-summary__section ll-summary__section--chronic">
+            <summary>
+               <i class="fas fa-heart-crack"></i>
+               {{localize "LL.Summary.Addiction"}}
+               <i
+                  class="fas fa-circle-info ll-info"
+                  data-tooltip="{{localize
+                     'LL.Summary.AddictionTip'
+                     cs=drug.apYieldCriticalSuccess
+                     s=drug.apYieldSuccess
+                     f=drug.apYieldFailure
+                     cf=drug.apYieldCriticalFailure
+                  }}"
+               ></i>
+            </summary>
+            <div class="ll-summary__section-body">
+               <div class="ll-summary__row">
+                  <strong>{{localize "LL.Summary.BaseWillDC"}}</strong>
+                  {{category.chronic.baseWillDC}}
+               </div>
+
+               <table class="ll-summary__table">
+                  <thead>
+                     <tr>
+                        <th>{{localize "LL.Summary.Stage"}}</th>
+                        <th>{{localize "LL.Summary.AP"}}</th>
+                        <th>{{localize "LL.Summary.Tolerance"}}</th>
+                        <th>{{localize "LL.Summary.WillPen"}}</th>
+                        <th>{{localize "LL.Summary.QuitPen"}}</th>
+                        <th>{{localize "LL.Summary.Decay"}}</th>
+                        <th>{{localize "LL.Summary.Satiation"}}</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {{#each category.chronic.addictionStages as |stg idx|}}
+                        <tr>
+                           <td>{{stg.label}}</td>
+                           <td>{{stg.apThreshold}}</td>
+                           <td>{{stg.maxTolerance}}</td>
+                           <td>{{#if
+                                 stg.willPenalty
+                              }}{{stg.willPenalty}}{{else}}{{localize
+                                    "LL.Summary.Empty"
+                                 }}{{/if}}</td>
+                           <td>{{#if
+                                 stg.quitPenalty
+                              }}{{stg.quitPenalty}}{{else}}{{localize
+                                    "LL.Summary.Empty"
+                                 }}{{/if}}</td>
+                           <td>{{stg.apDecayAmount}}
+                              /
+                              {{stg.apDecayPer.value}}
+                              {{stg.apDecayPer.unit}}</td>
+                           <td>{{stg.satiation.value}}
+                              {{stg.satiation.unit}}</td>
+                        </tr>
+                     {{/each}}
+                  </tbody>
+               </table>
+
+               {{#each category.chronic.addictionStages as |stg idx|}}
+                  {{#if
+                     (ll-or
+                        stg.chronicEffects.length stg.withdrawalEffects.length
+                     )
+                  }}
+                     <div class="ll-summary__stage-block">
+                        <div class="ll-summary__stage-heading">
+                           <strong>{{stg.label}}</strong>
+                        </div>
+                        {{#if stg.chronicEffects.length}}
+                           <div
+                              class="ll-summary__row"
+                              style="display: flex; gap: 0.25em; flex-wrap: wrap; align-items: center;"
+                           >
+                              <strong>{{localize
+                                    "LL.Summary.PermanentEffects"
+                                 }}</strong>
+                              {{#each stg.chronicEffects}}
+                                 {{{this.html}}}
+                              {{/each}}
+                           </div>
+                        {{/if}}
+                        {{#if stg.withdrawalEffects.length}}
+                           <div
+                              class="ll-summary__row"
+                              style="display: flex; gap: 0.25em; flex-wrap: wrap; align-items: center;"
+                           >
+                              <strong>{{localize
+                                    "LL.Summary.WithdrawalEffects"
+                                 }}</strong>
+                              {{#each stg.withdrawalEffects}}
+                                 {{{this.html}}}
+                              {{/each}}
+                           </div>
+                        {{/if}}
+                     </div>
+                  {{/if}}
+               {{/each}}
+            </div>
+         </details>
+      {{/if}}
+   {{/if}}
+</section>
