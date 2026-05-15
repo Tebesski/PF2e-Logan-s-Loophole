@@ -94,15 +94,23 @@ async function _enrichCategoryData(category) {
                c?.sourceId || `Compendium.pf2e.conditionitems.Item.${eff.slug}`
 
             const linkStr = `@UUID[${uuid}]{${name}${val}}`
-            eff.html = await TextEditor.enrichHTML(linkStr, { async: true })
+            const editor =
+               foundry.applications?.ux?.TextEditor?.implementation ??
+               TextEditor
+            eff.html = await editor.enrichHTML(linkStr, { async: true })
          } else if (eff.type === "uuid" && eff.uuid) {
             const doc = await fromUuid(eff.uuid).catch(() => null)
             const name = doc ? doc.name : "Unknown Item"
 
             const linkStr = `@UUID[${eff.uuid}]{${name}}`
-            eff.html = await TextEditor.enrichHTML(linkStr, { async: true })
+            const editor =
+               foundry.applications?.ux?.TextEditor?.implementation ??
+               TextEditor
+            eff.html = await editor.enrichHTML(linkStr, { async: true })
          } else {
-            eff.html = `<span class="ll-tag">Rule Element</span>`
+            const desc =
+               eff.description || eff.ruleDescription || "Rule Element"
+            eff.html = `<span class="ll-tag">${desc}</span>`
          }
       }
    }
@@ -161,7 +169,7 @@ async function _onRender(sheet, html, _data) {
    const currentExposure =
       EXPOSURE_TRAITS.find((t) => traits.includes(t.slug))?.slug || ""
 
-   const tabContent = await renderTemplate(
+   const tabContent = await foundry.applications.handlebars.renderTemplate(
       `modules/${MODULE_ID}/templates/item-drug-tab.hbs`,
       {
          drug,
@@ -197,7 +205,7 @@ async function _onRender(sheet, html, _data) {
 
    if (category) {
       const enrichedCategory = await _enrichCategoryData(category)
-      const summary = await renderTemplate(
+      const summary = await foundry.applications.handlebars.renderTemplate(
          `modules/${MODULE_ID}/templates/item-summary.hbs`,
          {
             drug,

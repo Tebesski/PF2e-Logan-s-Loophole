@@ -3,7 +3,7 @@ import { MODULE_ID, INTENT } from "../constants.mjs"
 const { DialogV2 } = foundry.applications.api
 
 export async function promptIntent({ itemName, categoryName }) {
-   const content = await renderTemplate(
+   const content = await foundry.applications.handlebars.renderTemplate(
       `modules/${MODULE_ID}/templates/intent-prompt.hbs`,
       { itemName, categoryName },
    )

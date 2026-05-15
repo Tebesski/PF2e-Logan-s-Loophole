@@ -205,9 +205,9 @@ function _parseEnvelope(jsonText) {
 }
 
 export function downloadJson(jsonText, filename) {
-   if (typeof saveDataToFile === "function") {
+   if (typeof foundry?.utils?.saveDataToFile === "function") {
       try {
-         saveDataToFile(jsonText, "application/json", filename)
+         foundry.utils.saveDataToFile(jsonText, "application/json", filename)
          return
       } catch (_e) {}
    }

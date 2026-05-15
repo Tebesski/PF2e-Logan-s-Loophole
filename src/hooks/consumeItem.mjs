@@ -46,7 +46,8 @@ export async function onConsumeItem(actor, item, message = null) {
 
    const configuredFortDC =
       Number(drug.fortitudeDC) || Number(category.chronic?.baseWillDC) || 0
-   const fortDC = configuredFortDC > 0 ? configuredFortDC : actorLevelBasedDC(actor)
+   const fortDC =
+      configuredFortDC > 0 ? configuredFortDC : actorLevelBasedDC(actor)
    const itemTraits = item.system?.traits?.value ?? []
    const rollOptions = buildRollOptions(category, "intoxication", itemTraits)
 
@@ -147,7 +148,8 @@ async function _runAddictionFlow(
 ) {
    const state = getState(actor, drug.categoryId)
    const configuredWillDC = Number(category.chronic?.baseWillDC) || 0
-   const willDC = configuredWillDC > 0 ? configuredWillDC : actorLevelBasedDC(actor)
+   const willDC =
+      configuredWillDC > 0 ? configuredWillDC : actorLevelBasedDC(actor)
    const quitPenalty = getQuitPenalty(actor, drug.categoryId)
    const itemTraits = item.system?.traits?.value ?? []
    const rollOptions = buildRollOptions(category, "addiction", itemTraits)
@@ -214,7 +216,7 @@ async function _runAddictionFlow(
 
    const flavorStr =
       flavorParts.length > 0 ? ` (${flavorParts.join(", ")})` : ""
-   const content = await renderTemplate(
+   const content = await foundry.applications.handlebars.renderTemplate(
       `modules/${MODULE_ID}/templates/chat-addiction-check.hbs`,
       {
          categoryName: category.name,
@@ -293,10 +295,14 @@ async function _applyEmbraceAdjustment(actor) {
       },
    }
    try {
-      const created = await actor.createEmbeddedDocuments("Item", [effectData], {
-         logansLoophole: true,
-         render: false,
-      })
+      const created = await actor.createEmbeddedDocuments(
+         "Item",
+         [effectData],
+         {
+            logansLoophole: true,
+            render: false,
+         },
+      )
       return created?.[0]?.id ?? null
    } catch (err) {
       console.error(`${MODULE_ID} | failed to apply Embrace adjustment:`, err)

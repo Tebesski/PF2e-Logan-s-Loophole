@@ -90,7 +90,7 @@
    "LL.ItemSheet.TV": "Toxicity",
    "LL.ItemSheet.TVTip": "How much Toxicity this dose yields. The amount is increased by 50% on a Critical Failure (rounded down)",
    "LL.ItemSheet.FortDC": "Fortitude DC",
-   "LL.ItemSheet.FortDCTip": "DC of the Fortitude save rolled when consuming this item. Leave blank to inherit the category's Base Will DC.",
+   "LL.ItemSheet.FortDCTip": "DC of the Fortitude save rolled when consuming this item. Leave blank for Level-Based DC.",
    "LL.ItemSheet.FortDCPlaceholder": "Level-based",
    "LL.ItemSheet.Damage": "Damage per Toxicity",
    "LL.ItemSheet.DamageTip": "Applied immediately when Toxicity breaches Tolerance.",

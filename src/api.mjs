@@ -462,14 +462,18 @@ export const api = {
       })
       const saveLabel = game.i18n.localize("LL.Immunity.Save")
 
-      new Dialog({
-         title: titleStr,
+      foundry.applications.api.DialogV2.wait({
+         window: { title: titleStr },
+         classes: ["logans-loophole", "dialog"],
          content,
-         buttons: {
-            save: {
+         buttons: [
+            {
+               action: "save",
                label: saveLabel,
-               icon: '<i class="fas fa-save"></i>',
-               callback: async (html) => {
+               icon: "fas fa-save",
+               default: true,
+               callback: async (event, button, dialog) => {
+                  const html = $(dialog.element)
                   const baseHours =
                      game.settings.get(MODULE_ID, "treatmentImmunityHours") ||
                      24
@@ -525,9 +529,8 @@ export const api = {
                   await actor.update(updateData)
                },
             },
-         },
-         default: "save",
-      }).render(true)
+         ],
+      })
    },
 
    async openTreatmentDialog(medic, patient) {
@@ -623,14 +626,96 @@ export const api = {
          </form>
       `
 
-      new Dialog({
-         title: `Treat Patient: ${patient.name}`,
+      const TreatmentDialog = class extends foundry.applications.api.DialogV2 {
+         _onRender(context, options) {
+            super._onRender(context, options)
+            const html = $(this.element)
+            const catSelect = html.find("#ll-treat-cat")
+            const typeSelect = html.find("#ll-treat-type")
+            const dcInput = html.find("#ll-treat-dc")
+            const dynDiv = html.find("#ll-treat-dynamic")
+
+            const getCat = () =>
+               categories.find((c) => c.id === catSelect.val())?.cat
+
+            const updateUI = () => {
+               const cat = getCat()
+               const type = typeSelect.val()
+               if (!cat) return
+
+               let dc = 15
+               let dynHTML = ""
+
+               if (type === "addiction") {
+                  dc = cat.chronic?.baseWillDC ?? 15
+                  dynHTML = `<label>Reduce AP by:</label><input type="number" id="ll-ap-drop" value="1" min="1"/>`
+               } else if (type === "withdrawal" || type === "intoxication") {
+                  dc = cat.chronic?.baseWillDC ?? 15
+                  if (type === "withdrawal") {
+                     dynHTML = `
+                        <label>Satiate for:</label>
+                        <div style="display:flex; gap:0.25em;">
+                           <input type="number" id="ll-with-time" value="1" min="1"/>
+                           <select id="ll-with-unit">${timeUnitsHTML}</select>
+                        </div>`
+                  } else {
+                     dynHTML = `
+                        <div style="display: flex; gap: 1em; align-items: center; margin-bottom: 0.6em;">
+                           <label style="display: flex; align-items: center; gap: 0.3em; cursor: pointer;">
+                              <input type="radio" name="ll-intox-method" value="time" checked> Reduce Decay Time
+                           </label>
+                           <label style="display: flex; align-items: center; gap: 0.3em; cursor: pointer;">
+                              <input type="radio" name="ll-intox-method" value="stage"> Reduce Stage
+                           </label>
+                        </div>
+                        <div id="ll-intox-time-opts" style="display:flex; gap:0.25em;">
+                           <input type="number" id="ll-intox-time" value="1" min="1"/>
+                           <select id="ll-intox-unit">${timeUnitsHTML}</select>
+                        </div>`
+                  }
+               } else if (type === "hangover") {
+                  dc = cat.acute?.hangover?.dc ?? 15
+                  dynHTML = `
+                     <label>Reduce Hangover duration by:</label>
+                     <div style="display:flex; gap:0.25em;">
+                        <input type="number" id="ll-hang-time" value="1" min="1"/>
+                        <select id="ll-hang-unit">${timeUnitsHTML}</select>
+                     </div>`
+               } else if (type === "overdose") {
+                  dc = cat.acute?.overdose?.dc ?? 15
+                  dynHTML = `<em>On success, the overdose phase wrapper and its immediate lockdown are removed.</em>`
+               }
+
+               dcInput.val(dc)
+               dynDiv.html(dynHTML)
+
+               html
+                  .find("input[name='ll-intox-method']")
+                  .on("change", function () {
+                     if ($(this).val() === "stage")
+                        html.find("#ll-intox-time-opts").hide()
+                     else html.find("#ll-intox-time-opts").show()
+                  })
+            }
+
+            catSelect.on("change", updateUI)
+            typeSelect.on("change", updateUI)
+            updateUI()
+         }
+      }
+
+      new TreatmentDialog({
+         window: { title: `Treat Patient: ${patient.name}` },
+         classes: ["logans-loophole", "dialog"],
          content,
-         buttons: {
-            treat: {
+         buttons: [
+            {
+               action: "treat",
                label: "Administer Treatment",
-               icon: '<i class="fas fa-medkit"></i>',
-               callback: async (html) => {
+               icon: "fas fa-medkit",
+               default: true,
+               callback: async (event, button, dialog) => {
+                  const html = $(dialog.element)
                   const catId = html.find("#ll-treat-cat").val()
                   const type = html.find("#ll-treat-type").val()
                   const dc = Number(html.find("#ll-treat-dc").val()) || 15
@@ -757,7 +842,10 @@ export const api = {
                            })
                            const newSec = Math.max(0, curSec - reduceSec)
                            const start = Number(w.system?.start?.value) || 0
-                           if (newSec === 0 || start + newSec <= game.time.worldTime) {
+                           if (
+                              newSec === 0 ||
+                              start + newSec <= game.time.worldTime
+                           ) {
                               toDelete.push(w.id)
                            } else {
                               const ratio = curSec > 0 ? newSec / curSec : 0
@@ -908,80 +996,7 @@ export const api = {
                   }
                },
             },
-         },
-         render: (html) => {
-            const catSelect = html.find("#ll-treat-cat")
-            const typeSelect = html.find("#ll-treat-type")
-            const dcInput = html.find("#ll-treat-dc")
-            const dynDiv = html.find("#ll-treat-dynamic")
-
-            const getCat = () =>
-               categories.find((c) => c.id === catSelect.val())?.cat
-
-            const updateUI = () => {
-               const cat = getCat()
-               const type = typeSelect.val()
-               if (!cat) return
-
-               let dc = 15
-               let dynHTML = ""
-
-               if (type === "addiction") {
-                  dc = cat.chronic?.baseWillDC ?? 15
-                  dynHTML = `<label>Reduce AP by:</label><input type="number" id="ll-ap-drop" value="1" min="1"/>`
-               } else if (type === "withdrawal" || type === "intoxication") {
-                  dc = cat.chronic?.baseWillDC ?? 15
-                  if (type === "withdrawal") {
-                     dynHTML = `
-                        <label>Satiate for:</label>
-                        <div style="display:flex; gap:0.25em;">
-                           <input type="number" id="ll-with-time" value="1" min="1"/>
-                           <select id="ll-with-unit">${timeUnitsHTML}</select>
-                        </div>`
-                  } else {
-                     dynHTML = `
-                        <div style="display: flex; gap: 1em; align-items: center; margin-bottom: 0.6em;">
-                           <label style="display: flex; align-items: center; gap: 0.3em; cursor: pointer;">
-                              <input type="radio" name="ll-intox-method" value="time" checked> Reduce Decay Time
-                           </label>
-                           <label style="display: flex; align-items: center; gap: 0.3em; cursor: pointer;">
-                              <input type="radio" name="ll-intox-method" value="stage"> Reduce Stage
-                           </label>
-                        </div>
-                        <div id="ll-intox-time-opts" style="display:flex; gap:0.25em;">
-                           <input type="number" id="ll-intox-time" value="1" min="1"/>
-                           <select id="ll-intox-unit">${timeUnitsHTML}</select>
-                        </div>`
-                  }
-               } else if (type === "hangover") {
-                  dc = cat.acute?.hangover?.dc ?? 15
-                  dynHTML = `
-                     <label>Reduce Hangover duration by:</label>
-                     <div style="display:flex; gap:0.25em;">
-                        <input type="number" id="ll-hang-time" value="1" min="1"/>
-                        <select id="ll-hang-unit">${timeUnitsHTML}</select>
-                     </div>`
-               } else if (type === "overdose") {
-                  dc = cat.acute?.overdose?.dc ?? 15
-                  dynHTML = `<em>On success, the overdose phase wrapper and its immediate lockdown are removed.</em>`
-               }
-
-               dcInput.val(dc)
-               dynDiv.html(dynHTML)
-
-               html
-                  .find("input[name='ll-intox-method']")
-                  .on("change", function () {
-                     if ($(this).val() === "stage")
-                        html.find("#ll-intox-time-opts").hide()
-                     else html.find("#ll-intox-time-opts").show()
-                  })
-            }
-
-            catSelect.on("change", updateUI)
-            typeSelect.on("change", updateUI)
-            updateUI()
-         },
+         ],
       }).render(true)
    },
 }

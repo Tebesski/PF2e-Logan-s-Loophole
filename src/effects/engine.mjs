@@ -280,7 +280,7 @@ export async function fireOverdose(actor, categoryId, category) {
       )
    }
 
-   const content = await renderTemplate(
+   const content = await foundry.applications.handlebars.renderTemplate(
       `modules/${MODULE_ID}/templates/chat-overdose.hbs`,
       {
          actorName: actor.name,
