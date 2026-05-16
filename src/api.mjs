@@ -333,7 +333,9 @@ export const api = {
          })
 
       for (const categoryId of categoryIds) await clearState(actor, categoryId)
-      await actor.update({ [`flags.-=${MODULE_ID}`]: null })
+      await actor.update({
+         [`flags.${MODULE_ID}`]: new foundry.data.operators.ForcedDeletion(),
+      })
 
       ChatMessage.create({
          content: `<strong>${actor.name}</strong> has been cleansed of all addictions.`,
@@ -512,17 +514,18 @@ export const api = {
                            ] = toSet[asp]
                         } else {
                            updateData[
-                              `flags.${MODULE_ID}.immunity.${tId}.-=${asp}`
-                           ] = null
+                              `flags.${MODULE_ID}.immunity.${tId}.${asp}`
+                           ] = new foundry.data.operators.ForcedDeletion()
                         }
                      })
 
                      const catImmForTarget = allImmunities[tId] || {}
                      for (const [key, val] of Object.entries(catImmForTarget)) {
-                        if (typeof val !== "number")
+                        if (typeof val !== "number") {
                            updateData[
-                              `flags.${MODULE_ID}.immunity.${tId}.-=${key}`
-                           ] = null
+                              `flags.${MODULE_ID}.immunity.${tId}.${key}`
+                           ] = new foundry.data.operators.ForcedDeletion()
+                        }
                      }
                   })
 

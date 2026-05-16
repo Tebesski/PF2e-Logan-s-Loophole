@@ -13,7 +13,7 @@ import { api } from "./api.mjs"
 Hooks.once("init", () => {
    registerSettings()
    registerHandlebarsHelpers()
-   loadTemplates([
+   foundry.applications.handlebars.loadTemplates([
       `modules/${MODULE_ID}/templates/registry-app.hbs`,
       `modules/${MODULE_ID}/templates/partial-effects.hbs`,
       `modules/${MODULE_ID}/templates/partial-info.hbs`,
@@ -307,7 +307,8 @@ async function _promptWrapperDeletion(item, flags) {
             await api.cureHangover(actor, catId)
          } else if (phase === PHASE.IMMUNITY) {
             const updateData = {}
-            updateData[`flags.${MODULE_ID}.immunity.${catId}`] = null
+            updateData[`flags.${MODULE_ID}.immunity.${catId}`] =
+               new foundry.data.operators.ForcedDeletion()
             await actor.update(updateData)
             await item.delete({ logansLoophole: true })
          }
